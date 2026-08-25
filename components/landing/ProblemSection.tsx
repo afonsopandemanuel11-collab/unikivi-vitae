@@ -22,36 +22,36 @@ const problems = [
 
 export default function ProblemSection() {
   return (
-    <section id="sobre" className="bg-surface-container-low py-section-gap">
-      <div className="max-w-container-max mx-auto px-margin-desktop">
-        <h2 className="font-headline-lg text-headline-lg text-primary text-center mb-16">
+    <section id="sobre" className="bg-surface-container-low py-16 sm:py-20 md:py-24">
+      <div className="max-w-container-max mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="font-headline-lg text-primary text-2xl sm:text-3xl md:text-4xl text-center mb-10 sm:mb-16 max-w-2xl mx-auto font-bold tracking-tight">
           Informação académica não deveria estar espalhada.
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {problems.map((p) => (
             <div
               key={p.title}
-              className="relative overflow-hidden rounded-xl border border-outline-variant shadow-sm h-72 flex flex-col justify-end p-8"
+              className="relative overflow-hidden rounded-2xl border border-outline-variant shadow-md min-h-[280px] sm:min-h-[300px] flex flex-col justify-end p-6 sm:p-8 group"
             >
-              {/* imagem de fundo */}
+              {/* Imagem de fundo */}
               <img
                 src={p.image}
                 alt=""
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              {/* gradiente escuro para o texto ficar legível */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
+              {/* Gradiente escuro para legibilidade */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/20" />
 
-              {/* conteúdo por cima */}
+              {/* Conteúdo sobreposto */}
               <div className="relative z-10">
-                <span className="material-symbols-outlined text-white/90 mb-4 text-4xl">
+                <span className="material-symbols-outlined text-white/90 mb-3 text-3xl sm:text-4xl">
                   {p.icon}
                 </span>
-                <h3 className="font-headline-md text-headline-md text-white mb-3">
+                <h3 className="font-headline-md text-xl font-bold text-white mb-2">
                   {p.title}
                 </h3>
-                <p className="font-body-md text-body-md text-white/85">
+                <p className="font-body-md text-xs sm:text-sm text-white/85 leading-relaxed">
                   {p.text}
                 </p>
               </div>

@@ -161,22 +161,22 @@ export default async function VisualizarCurriculoPage({
       {/* ── 1. CHROME DA APLICAÇÃO (visível em ecrã, oculta no print) ── */}
       <div className="visualizar-chrome print-hidden min-h-screen bg-slate-200 flex flex-col">
         {/* Barra de navegação superior */}
-        <div className="bg-white border-b border-slate-200 px-5 py-3 sticky top-0 z-50 flex items-center justify-between shadow-xs">
-          <div className="flex items-center gap-3">
+        <div className="bg-white border-b border-slate-200 px-3 sm:px-5 py-2.5 sm:py-3 sticky top-0 z-50 flex items-center justify-between shadow-xs gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <Link
               href={`/dashboard/curriculos/${curriculum.id}/editar`}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-primary p-2 rounded-xl hover:bg-slate-100 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-primary p-1.5 sm:p-2 rounded-xl hover:bg-slate-100 transition-colors shrink-0"
             >
               <span className="material-symbols-outlined text-base">arrow_back</span>
               <span className="hidden sm:inline">Voltar ao Editor</span>
             </Link>
             <span className="text-slate-300">|</span>
-            <span className="text-xs font-semibold text-slate-900 truncate max-w-[200px] sm:max-w-sm">
+            <span className="text-xs font-semibold text-slate-900 truncate max-w-[120px] sm:max-w-sm">
               {curriculum.title}
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <span className="hidden md:inline text-[10px] text-slate-400 font-medium uppercase tracking-widest">
               Pré-visualização
             </span>
@@ -185,10 +185,10 @@ export default async function VisualizarCurriculoPage({
         </div>
 
         {/* Canvas: simulação de folha A4 sobre fundo cinza */}
-        <div className="flex-1 py-10 px-4 flex flex-col items-center overflow-y-auto">
+        <div className="flex-1 py-6 sm:py-10 px-2 sm:px-4 flex flex-col items-center overflow-y-auto overflow-x-auto">
           {/* Sombra e moldura de papel */}
           <div
-            className="w-full max-w-[794px] bg-white shadow-2xl"
+            className="w-full max-w-[794px] bg-white shadow-2xl overflow-hidden flex justify-center"
             style={{ minHeight: "1123px" /* 297mm × 96dpi */ }}
           >
             <TemplateRenderer data={aggregatedData} snapshot={snapshot} />

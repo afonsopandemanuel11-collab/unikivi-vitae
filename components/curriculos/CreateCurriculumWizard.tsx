@@ -130,57 +130,57 @@ export default function CreateCurriculumWizard({ profileId }: { profileId: strin
   return (
     <div className="w-full max-w-4xl bg-white rounded-2xl border border-outline-variant shadow-lg overflow-hidden">
       {/* Top Stepper Header */}
-      <div className="bg-surface-container-low px-8 py-5 border-b border-outline-variant flex items-center justify-between">
+      <div className="bg-surface-container-low px-4 sm:px-8 py-4 sm:py-5 border-b border-outline-variant flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <span className="font-label-sm text-secondary uppercase tracking-widest text-xs">
+          <span className="font-label-sm text-secondary uppercase tracking-widest text-[10px] sm:text-xs">
             Construtor de Currículos • UNIKIVI Vitae
           </span>
-          <h1 className="font-headline-md text-primary text-xl font-bold">
+          <h1 className="font-headline-md text-primary text-lg sm:text-xl font-bold">
             Novo Currículo
           </h1>
         </div>
 
         {/* Stepper indicators */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <span
-              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+              className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${
                 step >= 1 ? "bg-primary text-white" : "border border-outline-variant text-on-surface-variant"
               }`}
             >
               1
             </span>
-            <span className={`text-xs font-medium hidden sm:inline ${step === 1 ? "text-primary font-bold" : "text-on-surface-variant"}`}>
+            <span className={`text-xs font-medium ${step === 1 ? "text-primary font-bold" : "text-on-surface-variant"}`}>
               Identidade
             </span>
           </div>
 
-          <div className="w-8 h-px bg-outline-variant" />
+          <div className="w-4 sm:w-8 h-px bg-outline-variant" />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <span
-              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+              className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${
                 step >= 2 ? "bg-primary text-white" : "border border-outline-variant text-on-surface-variant"
               }`}
             >
               2
             </span>
-            <span className={`text-xs font-medium hidden sm:inline ${step === 2 ? "text-primary font-bold" : "text-on-surface-variant"}`}>
+            <span className={`text-xs font-medium ${step === 2 ? "text-primary font-bold" : "text-on-surface-variant"}`}>
               Modelo
             </span>
           </div>
 
-          <div className="w-8 h-px bg-outline-variant" />
+          <div className="w-4 sm:w-8 h-px bg-outline-variant" />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <span
-              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+              className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold ${
                 step >= 3 ? "bg-primary text-white" : "border border-outline-variant text-on-surface-variant"
               }`}
             >
               3
             </span>
-            <span className={`text-xs font-medium hidden sm:inline ${step === 3 ? "text-primary font-bold" : "text-on-surface-variant"}`}>
+            <span className={`text-xs font-medium ${step === 3 ? "text-primary font-bold" : "text-on-surface-variant"}`}>
               Conteúdo
             </span>
           </div>
@@ -189,14 +189,14 @@ export default function CreateCurriculumWizard({ profileId }: { profileId: strin
 
       {/* Error Message */}
       {error && (
-        <div className="m-6 p-4 bg-red-50 border border-red-200 text-red-800 text-sm rounded-xl flex items-center gap-2">
+        <div className="m-4 sm:m-6 p-3 sm:p-4 bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm rounded-xl flex items-center gap-2">
           <span className="material-symbols-outlined text-red-600">error</span>
           <span>{error}</span>
         </div>
       )}
 
       {/* Step Content */}
-      <div className="p-8">
+      <div className="p-4 sm:p-6 md:p-8">
         {/* ================= STEP 1: IDENTIDADE ================= */}
         {step === 1 && (
           <div>

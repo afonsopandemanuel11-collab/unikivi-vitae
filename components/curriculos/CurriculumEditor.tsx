@@ -141,43 +141,43 @@ export default function CurriculumEditor({
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col font-sans">
       {/* Top Navbar */}
-      <header className="bg-white border-b border-outline-variant px-6 py-3.5 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-4">
+      <header className="bg-white border-b border-outline-variant px-3 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between sticky top-0 z-40 gap-2">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <Link
             href="/dashboard/curriculos"
-            className="p-2 text-on-surface-variant hover:text-primary hover:bg-slate-100 rounded-xl transition-colors"
+            className="p-1.5 sm:p-2 text-on-surface-variant hover:text-primary hover:bg-slate-100 rounded-xl transition-colors shrink-0"
             title="Voltar aos Meus Currículos"
           >
-            <span className="material-symbols-outlined text-xl">arrow_back</span>
+            <span className="material-symbols-outlined text-lg sm:text-xl">arrow_back</span>
           </Link>
-          <div>
-            <span className="font-label-sm text-secondary uppercase tracking-widest text-[10px]">
-              Editor de Currículo • UNIKIVI Vitae
+          <div className="min-w-0">
+            <span className="font-label-sm text-secondary uppercase tracking-widest text-[9px] sm:text-[10px] block truncate">
+              Editor • UNIKIVI Vitae
             </span>
-            <h1 className="font-headline-md text-primary text-base font-bold leading-tight">
+            <h1 className="font-headline-md text-primary text-xs sm:text-base font-bold leading-tight truncate max-w-[120px] sm:max-w-xs md:max-w-md">
               {curriculumTitle}
             </h1>
           </div>
         </div>
 
         {/* Mobile Switch Tab */}
-        <div className="flex sm:hidden bg-slate-100 p-1 rounded-xl">
+        <div className="flex lg:hidden bg-slate-100 p-1 rounded-xl shrink-0">
           <button
             onClick={() => setMobileView("edit")}
-            className={`px-3 py-1 text-xs font-bold rounded-lg ${mobileView === "edit" ? "bg-white text-primary shadow-xs" : "text-slate-600"}`}
+            className={`px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-colors ${mobileView === "edit" ? "bg-white text-primary shadow-xs" : "text-slate-600"}`}
           >
             Editar
           </button>
           <button
             onClick={() => setMobileView("preview")}
-            className={`px-3 py-1 text-xs font-bold rounded-lg ${mobileView === "preview" ? "bg-white text-primary shadow-xs" : "text-slate-600"}`}
+            className={`px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-colors ${mobileView === "preview" ? "bg-white text-primary shadow-xs" : "text-slate-600"}`}
           >
             Pré-visualizar
           </button>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {savedSuccess && (
             <span className="hidden md:inline-flex items-center gap-1 text-emerald-600 text-xs font-bold bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 animate-fade-in">
               <span className="material-symbols-outlined text-sm">check_circle</span>
@@ -198,19 +198,19 @@ export default function CurriculumEditor({
             href={`/dashboard/curriculos/${curriculumId}/visualizar`}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-xl transition-colors"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl transition-colors"
           >
             <span className="material-symbols-outlined text-base">picture_as_pdf</span>
-            <span>Exportar PDF</span>
+            <span>PDF</span>
           </Link>
 
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-1.5 bg-primary text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-primary/90 transition-all shadow-xs disabled:opacity-50 cursor-pointer"
+            className="flex items-center gap-1.5 bg-primary text-white text-xs font-bold px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl hover:bg-primary/90 transition-all shadow-xs disabled:opacity-50 cursor-pointer"
           >
             <span className="material-symbols-outlined text-base">save</span>
-            <span>{saving ? "A guardar..." : "Guardar Versão"}</span>
+            <span>{saving ? "A guardar..." : "Guardar"}</span>
           </button>
         </div>
       </header>
@@ -684,7 +684,7 @@ export default function CurriculumEditor({
 
         {/* ================= RIGHT LIVE PREVIEW CANVAS ================= */}
         <div
-          className={`flex-1 bg-slate-200/80 p-6 md:p-10 overflow-y-auto flex flex-col items-center justify-start ${
+          className={`flex-1 bg-slate-200/80 p-3 sm:p-6 md:p-10 overflow-y-auto overflow-x-auto flex flex-col items-center justify-start ${
             mobileView === "edit" ? "hidden lg:flex" : "flex"
           }`}
         >
@@ -692,7 +692,7 @@ export default function CurriculumEditor({
           <div className="mb-4 flex items-center gap-2 bg-white/90 backdrop-blur-xs px-3 py-1.5 rounded-xl border border-outline-variant shadow-xs">
             <button
               onClick={() => setZoom((z) => Math.max(75, z - 10))}
-              className="text-slate-600 hover:text-primary p-1"
+              className="text-slate-600 hover:text-primary p-1 cursor-pointer"
               title="Diminuir Zoom"
             >
               <span className="material-symbols-outlined text-base">zoom_out</span>
@@ -702,7 +702,7 @@ export default function CurriculumEditor({
             </span>
             <button
               onClick={() => setZoom((z) => Math.min(130, z + 10))}
-              className="text-slate-600 hover:text-primary p-1"
+              className="text-slate-600 hover:text-primary p-1 cursor-pointer"
               title="Aumentar Zoom"
             >
               <span className="material-symbols-outlined text-base">zoom_in</span>
@@ -712,7 +712,7 @@ export default function CurriculumEditor({
           {/* Rendered Template Document Page (A4 Aspect Ratio) */}
           <div
             style={{ transform: `scale(${zoom / 100})`, transformOrigin: "top center" }}
-            className="w-full max-w-[820px] transition-transform shadow-2xl rounded-sm overflow-hidden"
+            className="w-full max-w-[820px] transition-transform shadow-2xl rounded-sm overflow-hidden flex justify-center"
           >
             <TemplateRenderer data={data} snapshot={snapshot} />
           </div>

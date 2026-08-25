@@ -16,59 +16,65 @@ const columns = [
     links: [
       { label: "Sobre", href: "/sobre" },
       { label: "Portal da Universidade", href: "https://unikivi.ao" },
-      { label: "Suporte Académico", href: "#" },
+      { label: "Suporte Académico", href: "/sobre" },
     ],
   },
   {
     title: "Legal",
     links: [
-      { label: "Privacidade", href: "#" },
-      { label: "Termos de Uso", href: "#" },
+      { label: "Privacidade", href: "/sobre" },
+      { label: "Termos de Uso", href: "/sobre" },
     ],
   },
 ];
 
 export default function Footer() {
   return (
-    <footer className="bg-surface-container-highest border-t border-outline-variant w-full mt-section-gap">
-      <div className="max-w-container-max mx-auto px-margin-desktop py-16 grid grid-cols-1 md:grid-cols-5 gap-gutter">
-        <div className="md:col-span-2">
-          <span className="text-headline-md font-headline-md font-extrabold text-primary">
-            UNIKIVI Vitae
+    <footer className="bg-surface-container-highest border-t border-outline-variant w-full mt-16 sm:mt-24">
+      <div className="max-w-container-max mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-10">
+        {/* Brand column */}
+        <div className="sm:col-span-2 lg:col-span-2 space-y-3">
+          <span className="text-xl sm:text-2xl font-headline-md font-extrabold text-primary">
+            UNIKIVI <span className="text-primary/70">Vitae</span>
           </span>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-3 max-w-xs">
-            A plataforma central de gestão de percursos académicos e científicos.
+          <p className="font-body-md text-on-surface-variant text-sm max-w-sm leading-relaxed">
+            A plataforma central de gestão de percursos académicos e científicos da Universidade Kimpa Vita.
           </p>
         </div>
-        <div>
-  <h4 className="font-headline-md text-headline-md text-primary text-sm mb-4">
-    Créditos
-  </h4>
-  <ul className="flex flex-col gap-2 font-body-md text-body-md text-on-surface-variant text-sm">
-    <li>Desenvolvedores: Afonso Pande Manuel e Celeste Maquiesse Bengui Canga</li>
-    <li>Sob orientação de: Nkanga Pedro</li>
-  </ul>
-</div>
 
+        {/* Credits column */}
+        <div className="space-y-3">
+          <h4 className="font-headline-md text-primary text-sm font-bold">
+            Créditos
+          </h4>
+          <ul className="flex flex-col gap-2 font-body-md text-on-surface-variant text-xs sm:text-sm leading-relaxed">
+            <li>Desenvolvedores: Afonso Pande Manuel e Celeste Maquiesse Bengui Canga</li>
+            <li>Sob orientação de: Nkanga Pedro</li>
+          </ul>
+        </div>
+
+        {/* Links columns */}
         {columns.map((col) => (
-          <div key={col.title}>
-            <h4 className="font-headline-md text-headline-md text-primary text-sm mb-4">
+          <div key={col.title} className="space-y-3">
+            <h4 className="font-headline-md text-primary text-sm font-bold">
               {col.title}
             </h4>
             <ul className="flex flex-col gap-2">
               {col.links.map((link) => (
                 <li key={link.label}>
-                  {link.href.startsWith("http") || link.href === "#" ? (
+                  {link.href.startsWith("http") ? (
                     <a
                       href={link.href}
-                      className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors text-sm"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-body-md text-on-surface-variant hover:text-primary transition-colors text-xs sm:text-sm"
                     >
                       {link.label}
                     </a>
                   ) : (
                     <Link
                       href={link.href}
-                      className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors text-sm"
+                      className="font-body-md text-on-surface-variant hover:text-primary transition-colors text-xs sm:text-sm"
                     >
                       {link.label}
                     </Link>
@@ -80,8 +86,8 @@ export default function Footer() {
         ))}
       </div>
 
-      <div className="border-t border-outline-variant py-6 text-center">
-        <p className="font-label-sm text-label-sm text-on-surface-variant">
+      <div className="border-t border-outline-variant/60 py-6 px-4 text-center">
+        <p className="font-label-sm text-xs text-on-surface-variant">
           © 2026 Universidade Kimpa Vita. Todos os direitos reservados.
         </p>
       </div>

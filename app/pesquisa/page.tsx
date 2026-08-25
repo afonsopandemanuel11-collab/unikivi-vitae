@@ -56,10 +56,10 @@ export default async function PesquisaPage({
   params.set("limit", String(currentLimit + PAGE_SIZE));
 
   return (
-    <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 grid grid-cols-1 md:grid-cols-12 gap-gutter">
+    <main className="flex-grow w-full max-w-container-max mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
       <FilterSidebar areas={areas ?? []} />
 
-      <section className="md:col-span-9 flex flex-col space-y-6">
+      <section className="md:col-span-8 lg:col-span-9 flex flex-col space-y-6">
         <SearchInput />
 
         <div className="flex justify-between items-center py-2">
