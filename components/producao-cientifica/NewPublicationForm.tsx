@@ -1,21 +1,24 @@
 "use client";
 
 import { useState } from "react";
-
 const PUBLICATION_TYPES = [
   { value: "ARTICLE", label: "Artigo Científico" },
-  { value: "CONFERENCE_PAPER", label: "Comunicação em Conferência" },
+  { value: "CONFERENCE", label: "Comunicação em Conferência" },
   { value: "BOOK_CHAPTER", label: "Capítulo de Livro" },
   { value: "BOOK", label: "Livro" },
+  { value: "THESIS", label: "Tese" },
   { value: "REPORT", label: "Relatório" },
+  { value: "PREPRINT", label: "Preprint" },
+  { value: "OTHER", label: "Outro" },
 ];
 
 const CROSSREF_TYPE_MAP: Record<string, string> = {
   "journal-article": "ARTICLE",
-  "proceedings-article": "CONFERENCE_PAPER",
+  "proceedings-article": "CONFERENCE",
   "book-chapter": "BOOK_CHAPTER",
   book: "BOOK",
   monograph: "BOOK",
+  dissertation: "THESIS",
 };
 
 const inputClass =

@@ -13,12 +13,12 @@ type Publication = {
   publication_type: string;
   publication_authors: { author_order: number; external_name: string | null; profiles: { full_name: string } | null }[];
 };
-
 const TABS = [
   { key: "ALL", label: "Todos" },
   { key: "ARTICLE", label: "Artigos" },
   { key: "BOOK", label: "Livros" },
-  { key: "CONFERENCE_PAPER", label: "Conferências" },
+  { key: "CONFERENCE", label: "Conferências" },
+  { key: "THESIS", label: "Teses" },
 ];
 
 function authorNames(pub: Publication) {
@@ -63,13 +63,13 @@ export default function PublicationsManager({
       : activeTab === "BOOK"
       ? publications.filter((p) => p.publication_type === "BOOK" || p.publication_type === "BOOK_CHAPTER")
       : publications.filter((p) => p.publication_type === activeTab);
-
   const counts = {
-    ALL: publications.length,
-    ARTICLE: publications.filter((p) => p.publication_type === "ARTICLE").length,
-    BOOK: publications.filter((p) => p.publication_type === "BOOK" || p.publication_type === "BOOK_CHAPTER").length,
-    CONFERENCE_PAPER: publications.filter((p) => p.publication_type === "CONFERENCE_PAPER").length,
-  };
+  ALL: publications.length,
+  ARTICLE: publications.filter((p) => p.publication_type === "ARTICLE").length,
+  BOOK: publications.filter((p) => p.publication_type === "BOOK" || p.publication_type === "BOOK_CHAPTER").length,
+  CONFERENCE: publications.filter((p) => p.publication_type === "CONFERENCE").length,
+  THESIS: publications.filter((p) => p.publication_type === "THESIS").length,
+};
 
   return (
     <div>

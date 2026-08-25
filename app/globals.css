@@ -118,3 +118,73 @@
   --spacing-unit: 8px;
   --spacing-section-gap: 80px;
 }
+
+/* =====================================================
+   ESTILOS DE IMPRESSÃO — CURRÍCULO A4
+   Arquitectura de dois blocos:
+     .print-hidden → oculto no print (chrome da aplicação)
+     #resume-document → visível no print (somente o CV)
+   ===================================================== */
+@media print {
+  /* Configuração de página A4 sem margens do browser */
+  @page {
+    size: A4 portrait;
+    margin: 0mm;
+  }
+
+  /* Ocultar toda a chrome da aplicação */
+  .print-hidden {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Tornar o body e html limpos */
+  html, body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* O #resume-document estava position:fixed fora do viewport.
+     No print, trazemo-lo para o fluxo normal da página. */
+  #resume-document {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    z-index: auto !important;
+    pointer-events: auto !important;
+    display: block !important;
+    visibility: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Garantir cores reais no PDF (fundos coloridos, fotos, etc.) */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Regras de quebra de página inteligentes */
+  .resume-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .resume-entry {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .resume-section-title {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+}

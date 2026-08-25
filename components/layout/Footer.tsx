@@ -1,17 +1,21 @@
 // components/layout/Footer.tsx
+import Link from "next/link";
+
 const columns = [
   {
     title: "Plataforma",
     links: [
       { label: "Início", href: "/" },
-      { label: "Pesquisa", href: "#" },
-      { label: "Entrar", href: "#" },
+      { label: "Pesquisa", href: "/pesquisa" },
+      { label: "Entrar", href: "/login" },
+      { label: "Criar Perfil", href: "/registo" },
     ],
   },
   {
     title: "Institucional",
     links: [
-      { label: "Portal da Universidade", href: "#" },
+      { label: "Sobre", href: "/sobre" },
+      { label: "Portal da Universidade", href: "https://unikivi.ao" },
       { label: "Suporte Académico", href: "#" },
     ],
   },
@@ -54,12 +58,21 @@ export default function Footer() {
             <ul className="flex flex-col gap-2">
               {col.links.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors text-sm"
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("http") || link.href === "#" ? (
+                    <a
+                      href={link.href}
+                      className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors text-sm"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors text-sm"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

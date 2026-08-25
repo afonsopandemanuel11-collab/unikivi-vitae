@@ -49,6 +49,12 @@ const navGroups = [
       { label: "Perfil Publico", icon: "public", href: "/dashboard/perfil-publico" },
     ],
   },
+  {
+  label: "SISTEMA",
+  items: [
+    { label: "Definicoes", icon: "settings", href: "/dashboard/definicoes/conta" },
+  ],
+},
 ];
 
 function getStatusBadge(status: DashboardShellProps["profile"]["status"]) {

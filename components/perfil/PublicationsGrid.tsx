@@ -11,12 +11,14 @@ type Publication = {
 
 const TYPE_LABELS: Record<string, string> = {
   ARTICLE: "Artigo Científico",
-  CONFERENCE_PAPER: "Comunicação em Conferência",
+  CONFERENCE: "Comunicação em Conferência",
   BOOK_CHAPTER: "Capítulo de Livro",
   BOOK: "Livro",
+  THESIS: "Tese",
   REPORT: "Relatório",
+  PREPRINT: "Preprint",
+  OTHER: "Outro",
 };
-
 export default function PublicationsGrid({
   publicationAuthors,
 }: {
