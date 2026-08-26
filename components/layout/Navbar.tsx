@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import NavDropdown from "./NavDropdown";
 
 const navGroups = [
@@ -38,8 +39,18 @@ export default function Navbar() {
       <div className="max-w-container-max mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
         {/* Logo & Desktop Nav */}
         <div className="flex items-center gap-6 lg:gap-8">
-          <Link href="/" className="text-xl sm:text-2xl font-headline-md font-extrabold text-primary tracking-tight">
-            UNIKIVI <span className="text-primary/70">Vitae</span>
+          <Link href="/" className="flex items-center gap-3 group">
+            <Image
+              src="/logo.png"
+              alt="UNIKIVI Vitae Logo"
+              width={38}
+              height={38}
+              className="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0 group-hover:scale-105 transition-transform"
+              priority
+            />
+            <span className="text-xl sm:text-2xl font-headline-md font-extrabold text-primary tracking-tight">
+              UNIKIVI <span className="text-primary/70">Vitae</span>
+            </span>
           </Link>
 
           <div className="hidden md:flex gap-4 lg:gap-6 items-center">

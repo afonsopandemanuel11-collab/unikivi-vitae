@@ -1,5 +1,6 @@
 // components/layout/Footer.tsx
 import Link from "next/link";
+import Image from "next/image";
 
 const columns = [
   {
@@ -34,9 +35,18 @@ export default function Footer() {
       <div className="max-w-container-max mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-10">
         {/* Brand column */}
         <div className="sm:col-span-2 lg:col-span-2 space-y-3">
-          <span className="text-xl sm:text-2xl font-headline-md font-extrabold text-primary">
-            UNIKIVI <span className="text-primary/70">Vitae</span>
-          </span>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/logo.png"
+              alt="UNIKIVI Vitae Logo"
+              width={36}
+              height={36}
+              className="w-9 h-9 object-contain shrink-0"
+            />
+            <span className="text-xl sm:text-2xl font-headline-md font-extrabold text-primary">
+              UNIKIVI <span className="text-primary/70">Vitae</span>
+            </span>
+          </div>
           <p className="font-body-md text-on-surface-variant text-sm max-w-sm leading-relaxed">
             A plataforma central de gestão de percursos académicos e científicos da Universidade Kimpa Vita.
           </p>
