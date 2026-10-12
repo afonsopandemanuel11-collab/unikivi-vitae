@@ -5,7 +5,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 
 const slides = [
-  { image: "/images/carousel/frende (12).jpg", caption: "Tenha uma visão completa e centralizada do seu percurso." },
+  { image: "/images/carousel/c (10).jpg", caption: "Tenha uma visão completa e centralizada do seu percurso." },
   { image: "/images/carousel/c (6).jpg", caption: "Organize a sua identidade académica, científica e profissional." },
 ];
 

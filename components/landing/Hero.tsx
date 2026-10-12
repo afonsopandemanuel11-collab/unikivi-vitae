@@ -37,7 +37,7 @@ export default function Hero() {
 
       <div className="w-full max-w-4xl relative rounded-2xl border border-outline-variant bg-white p-2 sm:p-3 shadow-xl">
         <Image
-          src="/frende (2).jpg"
+          src="/c (16).jpg"
           alt="Pré-visualização do dashboard da UNIKIVI Vitae"
           width={1500}
           height={800}

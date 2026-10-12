@@ -1,0 +1,16 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import AdminShell from "@/components/admin/AdminShell";
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
+  const isAdmin = (roles ?? []).some((r) => r.role === "institution_admin" || r.role === "super_admin");
+
+  if (!isAdmin) redirect("/dashboard");
+
+  return <AdminShell>{children}</AdminShell>;
+}
