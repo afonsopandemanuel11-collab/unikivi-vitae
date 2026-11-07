@@ -212,8 +212,10 @@ export default function CurriculumTemplates() {
             key={t.value}
             className="min-w-[260px] md:min-w-[300px] snap-start shrink-0 bg-white rounded-2xl border border-outline-variant hover:border-primary shadow-sm hover:shadow-lg transition-all group cursor-pointer hover:-translate-y-1 overflow-hidden"
           >
-            <div className="h-44 bg-surface-container-low overflow-hidden border-b border-outline-variant">
-              <TemplatePreview type={t.preview} />
+            <div className="h-44 bg-surface-container-low overflow-hidden border-b border-outline-variant p-2">
+              <div className="h-full w-full rounded-lg overflow-hidden shadow-sm border border-outline-variant/50">
+                <TemplatePreview type={t.preview} />
+              </div>
             </div>
             <div className="p-5">
               <div className="flex items-center justify-between mb-2">

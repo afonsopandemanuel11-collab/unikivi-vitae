@@ -16,13 +16,6 @@ export default async function ExploreSection() {
   const displayProfiles = profiles ?? [];
 
   // Fallback static names if DB empty
-  const fallback = [
-    { id: "1", initials: "AP", name: "Afonso Pande", role: "Investigador" },
-    { id: "2", initials: "CM", name: "Celeste Canga", role: "Docente" },
-    { id: "3", initials: "JM", name: "João Manuel", role: "Estudante" },
-    { id: "4", initials: "MK", name: "Maria Kimpa", role: "Investigadora" },
-  ];
-
   return (
     <section className="py-section-gap bg-primary-container relative overflow-hidden">
       <div className="absolute -right-20 -top-20 w-96 h-96 bg-primary opacity-20 rounded-full blur-3xl pointer-events-none" />
@@ -92,18 +85,11 @@ export default async function ExploreSection() {
                       </Link>
                     );
                   })
-                : fallback.map((f) => (
-                    <div key={f.id} className="flex items-center gap-3 p-3 bg-white/10 rounded-xl">
-                      <div className="w-10 h-10 rounded-full bg-white/20 text-white font-bold flex items-center justify-center text-sm shrink-0">
-                        {f.initials}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-white font-bold text-sm truncate">{f.name}</p>
-                        <p className="text-white/60 text-xs truncate">{f.role}</p>
-                      </div>
-                      <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" title="Online" />
-                    </div>
-                  ))}
+                : <div className="rounded-xl border border-white/15 bg-white/5 px-5 py-8 text-center">
+                    <span className="material-symbols-outlined text-3xl text-white/70">groups</span>
+                    <p className="mt-2 text-sm font-bold text-white">A comunidade está a crescer</p>
+                    <p className="mt-1 text-xs leading-relaxed text-white/60">Os perfis públicos aparecerão aqui quando estiverem disponíveis.</p>
+                  </div>}
             </div>
 
             <Link

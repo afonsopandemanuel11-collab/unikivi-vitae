@@ -24,37 +24,6 @@ const TYPE_COLORS: Record<string, string> = {
   OTHER: "bg-gray-100 text-gray-700",
 };
 
-// Fallback data when DB is empty
-const FALLBACK_PUBLICATIONS = [
-  {
-    id: "f1",
-    title: "Redes Neurais Aplicadas ao Diagnóstico de Doenças Tropicais em Angola",
-    abstract: "Este estudo explora o potencial das redes neurais convolucionais para a detecção precoce de doenças endémicas, utilizando dados clínicos recolhidos em contexto rural angolano.",
-    publication_type: "ARTICLE",
-    year: 2024,
-    journal: "African Journal of Biomedical Research",
-    authors: "Afonso Pande Manuel, Celeste Canga",
-  },
-  {
-    id: "f2",
-    title: "Governança de Dados em Universidades Públicas Africanas: Desafios e Oportunidades",
-    abstract: "Análise comparativa das políticas de gestão de dados académicos em universidades subsaarianas, com foco nas implicações para a soberania digital institucional.",
-    publication_type: "CONFERENCE",
-    year: 2024,
-    journal: "AFRICOMM 2024 — Proceedings",
-    authors: "Maria Kimpa Vita, João Nkanga",
-  },
-  {
-    id: "f3",
-    title: "Sistemas de Informação Geográfica para Planeamento Urbano em N'dalatando",
-    abstract: "Proposta de arquitectura SIG para suporte à decisão no planeamento urbanístico municipal, integrando dados históricos e sensoriamento remoto de baixo custo.",
-    publication_type: "THESIS",
-    year: 2023,
-    journal: "Universidade Kimpa Vita — Repositório Institucional",
-    authors: "Pedro Lukamba",
-  },
-];
-
 export default async function FeaturedPublications() {
   const supabase = await createClient();
 
@@ -80,7 +49,7 @@ export default async function FeaturedPublications() {
           .join(", ");
         return { ...pub, authors };
       })
-    : FALLBACK_PUBLICATIONS;
+    : [];
 
   return (
     <section className="py-section-gap bg-surface-container-low overflow-hidden">
@@ -91,6 +60,18 @@ export default async function FeaturedPublications() {
         </p>
       </div>
 
+      {!hasRealData ? (
+        <div className="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop">
+          <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest px-6 py-10 text-center shadow-sm">
+            <span className="material-symbols-outlined text-4xl text-primary/60">auto_stories</span>
+            <h3 className="mt-3 font-headline-md text-lg font-bold text-primary">As publicações da comunidade estarão aqui</h3>
+            <p className="mt-2 font-body-md text-sm text-on-surface-variant">Ainda não há produção científica pública para destacar. Explore o diretório ou registe o seu perfil académico.</p>
+            <Link href="/registo" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-primary/90">
+              Criar perfil académico <span className="material-symbols-outlined text-base">arrow_forward</span>
+            </Link>
+          </div>
+        </div>
+      ) : (
       <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory px-margin-mobile md:px-margin-desktop pb-8 max-w-container-max mx-auto">
         {items.map((pub: any) => (
           <div
@@ -155,12 +136,8 @@ export default async function FeaturedPublications() {
           </div>
         </Link>
       </div>
-
-      {!hasRealData && (
-        <p className="text-center text-xs text-on-surface-variant mt-2 opacity-60">
-          * Publicações ilustrativas — adicione as suas na plataforma
-        </p>
       )}
+
     </section>
   );
 }

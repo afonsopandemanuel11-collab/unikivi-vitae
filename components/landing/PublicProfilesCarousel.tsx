@@ -2,45 +2,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
-const FALLBACK_PROFILES = [
-  {
-    id: "f1",
-    initials: "AP",
-    name: "Afonso Pande Manuel",
-    role: "Investigador · Informática",
-    bio: "Especialista em desenvolvimento de software e sistemas de informação académicos.",
-    tags: ["Software", "IA"],
-    pubs: 8,
-    projects: 3,
-    verified: true,
-    photo_url: null,
-  },
-  {
-    id: "f2",
-    initials: "CC",
-    name: "Celeste Maquiesse Canga",
-    role: "Docente · Ciências Jurídicas",
-    bio: "Docência e investigação em Direito Público e Governança Institucional.",
-    tags: ["Direito", "Governança"],
-    pubs: 12,
-    projects: 4,
-    verified: true,
-    photo_url: null,
-  },
-  {
-    id: "f3",
-    initials: "MK",
-    name: "Maria Kimpa Vita",
-    role: "Investigadora · Economia",
-    bio: "Investigação em desenvolvimento económico e políticas públicas em Angola.",
-    tags: ["Economia", "Políticas"],
-    pubs: 15,
-    projects: 6,
-    verified: true,
-    photo_url: null,
-  },
-];
-
 export default async function PublicProfilesCarousel() {
   const supabase = await createClient();
 
@@ -132,40 +93,11 @@ export default async function PublicProfilesCarousel() {
                 </Link>
               );
             })
-          : FALLBACK_PROFILES.map((p) => (
-              <div
-                key={p.id}
-                className="min-w-[280px] sm:min-w-[320px] snap-start shrink-0 bg-white border border-outline-variant rounded-2xl p-6 shadow-sm flex flex-col"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-14 h-14 rounded-full bg-primary text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0">
-                    {p.initials}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-headline-md text-primary font-bold text-base truncate">{p.name}</span>
-                      {p.verified && <span className="material-symbols-outlined text-secondary text-base shrink-0">verified</span>}
-                    </div>
-                    <span className="text-xs text-on-surface-variant truncate block mt-0.5">{p.role}</span>
-                  </div>
-                </div>
-
-                <p className="text-xs text-on-surface-variant leading-relaxed line-clamp-2 mb-4 flex-1">{p.bio}</p>
-
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {p.tags.map((tag) => (
-                    <span key={tag} className="bg-surface-container text-primary text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-outline-variant/40">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex justify-between pt-3 border-t border-outline-variant/50 text-xs text-on-surface-variant">
-                  <span><strong className="text-primary">{p.pubs}</strong> Publicações</span>
-                  <span><strong className="text-primary">{p.projects}</strong> Projetos</span>
-                </div>
-              </div>
-            ))}
+          : <div className="min-w-[280px] sm:min-w-[320px] snap-start shrink-0 rounded-2xl border border-outline-variant bg-white p-7 shadow-sm flex flex-col justify-center text-center">
+              <span className="material-symbols-outlined text-4xl text-primary/60">person_search</span>
+              <h3 className="mt-3 font-headline-md text-base font-bold text-primary">Perfis em atualização</h3>
+              <p className="mt-2 text-xs leading-relaxed text-on-surface-variant">Quando houver perfis públicos, serão apresentados aqui.</p>
+            </div>}
 
         {/* CTA card */}
         <Link

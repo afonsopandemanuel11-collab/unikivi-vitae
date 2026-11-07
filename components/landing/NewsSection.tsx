@@ -52,19 +52,24 @@ export default async function NewsSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {news.map((item) => {
             const imgSrc = item.image_url || CATEGORY_FALLBACK_IMAGES[item.category] || "/images/carousel/c (10).jpg";
             return (
-              <article key={item.id} className="flex flex-col group cursor-pointer">
-                <div className="aspect-video rounded-2xl mb-4 overflow-hidden border border-outline-variant shadow-sm">
+              <article key={item.id} className="flex flex-col group rounded-2xl border border-outline-variant/70 bg-white p-3 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
+                <div className="aspect-video rounded-xl mb-4 overflow-hidden border border-outline-variant/70 bg-surface-container">
                   <img
                     src={imgSrc}
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = CATEGORY_FALLBACK_IMAGES[item.category] || "/images/carousel/c (10).jpg";
+                    }}
                   />
                 </div>
 
+                <div className="px-2 pb-2 flex flex-1 flex-col">
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${CATEGORY_STYLES[item.category] ?? "bg-surface-container text-on-surface-variant"}`}>
                     {CATEGORY_LABELS[item.category] ?? item.category}
@@ -91,6 +96,7 @@ export default async function NewsSection() {
                 <div className="mt-4 flex items-center gap-1 text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                   Ler mais
                   <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                </div>
                 </div>
               </article>
             );
