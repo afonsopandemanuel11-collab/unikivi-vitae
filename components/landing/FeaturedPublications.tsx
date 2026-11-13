@@ -38,10 +38,10 @@ export default async function FeaturedPublications() {
   const hasRealData = publications && publications.length > 0;
 
   const items = hasRealData
-    ? publications.map((pub: any) => {
+    ? publications.map((pub) => {
         const authors = [...(pub.publication_authors ?? [])]
-          .sort((a: any, b: any) => a.author_order - b.author_order)
-          .map((a: any) => {
+          .sort((a, b) => a.author_order - b.author_order)
+          .map((a) => {
             const prof = Array.isArray(a.profiles) ? a.profiles[0] : a.profiles;
             return prof?.full_name ?? a.external_name;
           })
@@ -73,7 +73,7 @@ export default async function FeaturedPublications() {
         </div>
       ) : (
       <div className="mx-auto flex max-w-container-max snap-x snap-mandatory gap-5 overflow-x-auto px-margin-mobile pb-5 md:gap-6 md:px-margin-desktop">
-        {items.map((pub: any) => (
+        {items.map((pub) => (
           <div
             key={pub.id}
             className="flex min-h-[230px] w-[min(88vw,920px)] shrink-0 snap-start flex-col rounded-xl border border-outline-variant/70 bg-white p-6 shadow-[0_12px_32px_rgba(0,17,58,0.055)] transition-all duration-300 hover:-translate-y-0.5 hover:border-outline-variant hover:shadow-[0_18px_40px_rgba(0,17,58,0.09)] sm:p-8 group"

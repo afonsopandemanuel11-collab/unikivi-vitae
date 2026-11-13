@@ -83,7 +83,7 @@ export default function PublicProfileSettings({ profile }: { profile: Profile })
           </p>
         </div>
         <Link
-          href={`/perfil/${profile.id}`}
+          href={`/v/${profile.slug}`}
           target="_blank"
           className="shrink-0 bg-primary text-on-primary px-6 py-3 rounded-lg font-label-sm hover:bg-primary-container transition-colors flex items-center gap-2"
         >

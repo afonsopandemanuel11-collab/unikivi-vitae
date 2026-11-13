@@ -1,6 +1,8 @@
 // components/auth/steps/StepPerfil.tsx
 "use client";
 
+import Link from "next/link";
+
 export type ProfileType =
   | "TEACHER"
   | "RESEARCHER"
@@ -105,9 +107,9 @@ export default function StepPerfil({
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t border-outline-variant/30">
-        <a href="/" className="text-label-sm text-on-surface-variant hover:text-primary">
+        <Link href="/" className="text-label-sm text-on-surface-variant hover:text-primary">
           Cancelar
-        </a>
+        </Link>
         <button
           type="button"
           onClick={onNext}

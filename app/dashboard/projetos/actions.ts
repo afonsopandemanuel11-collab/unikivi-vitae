@@ -2,6 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import type { Enums } from "@/lib/supabase/database.types";
+
+const PROJECT_STATUSES = ["ACTIVE", "SUSPENDED", "PLANNING", "COMPLETED", "CANCELLED"] as const satisfies readonly Enums<"project_status_enum">[];
 
 export type ProjectInput = {
   title: string;
@@ -9,7 +12,7 @@ export type ProjectInput = {
   funding_source?: string | null;
   start_date?: string | null;
   end_date?: string | null;
-  status: string;
+  status: Enums<"project_status_enum">;
   description?: string | null;
 };
 
@@ -38,7 +41,7 @@ export async function addProject(profileId: string, data: ProjectInput) {
       description: data.description || null,
       start_date: data.start_date || null,
       end_date: data.end_date || null,
-      status: data.status,
+      status: PROJECT_STATUSES.includes(data.status) ? data.status : "PLANNING",
       funding_source: data.funding_source || null,
     })
     .select("id")

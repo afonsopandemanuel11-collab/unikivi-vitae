@@ -1,5 +1,6 @@
 // components/landing/PublicProfilesCarousel.tsx
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function PublicProfilesCarousel() {
@@ -29,11 +30,11 @@ export default async function PublicProfilesCarousel() {
 
       <div className="mx-auto flex max-w-container-max snap-x snap-mandatory gap-5 overflow-x-auto px-margin-mobile pb-5 md:gap-6 md:px-margin-desktop">
         {hasRealData
-          ? dbProfiles.map((p: any) => {
+          ? dbProfiles.map((p) => {
               const name = p.professional_name || p.full_name;
               const pos = Array.isArray(p.position) ? p.position[0] : p.position;
               const tags = (p.profile_skills ?? [])
-                .map((ps: any) => {
+                .map((ps) => {
                   const skill = Array.isArray(ps.skills) ? ps.skills[0] : ps.skills;
                   return skill?.name;
                 })
@@ -42,7 +43,7 @@ export default async function PublicProfilesCarousel() {
               const initials = name
                 .split(" ")
                 .slice(0, 2)
-                .map((n: string) => n[0])
+                      .map((n) => n[0])
                 .join("")
                 .toUpperCase();
 
@@ -54,7 +55,7 @@ export default async function PublicProfilesCarousel() {
                 >
                   <div className="mb-2 flex min-w-0 items-center gap-3">
                     {p.photo_url ? (
-                      <img src={p.photo_url} alt={name} className="h-11 w-11 shrink-0 rounded-full border border-outline-variant/70 object-cover" />
+                      <Image src={p.photo_url} alt={name} width={44} height={44} unoptimized className="h-11 w-11 shrink-0 rounded-full border border-outline-variant/70 object-cover" />
                     ) : (
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                         {initials}

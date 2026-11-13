@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import type { Tables } from "@/lib/supabase/database.types";
 
 export default function AccountSettingsForm({
   profile,
   email,
   provider,
 }: {
-  profile: any;
+  profile: Pick<Tables<"profiles">, "full_name" | "user_id" | "profile_type">;
   email: string;
   provider: string;
 }) {

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import CurriculumEditor from "@/components/curriculos/CurriculumEditor";
 import { FullCurriculumData } from "@/components/curriculos/types";
-import { CurriculumSnapshot } from "@/app/dashboard/curriculos/actions";
+import { parseCurriculumSnapshot } from "@/components/curriculos/parseSnapshot";
 
 export default async function EditarCurriculoPage({
   params,
@@ -53,7 +53,7 @@ export default async function EditarCurriculoPage({
     supabase.from("publication_authors").select("publications(*)").eq("profile_id", profile.id),
     supabase.from("certifications").select("*").eq("profile_id", profile.id).order("issue_date", { ascending: false }),
     supabase.from("awards").select("*").eq("profile_id", profile.id).order("year", { ascending: false }),
-    supabase.from("profile_languages").select("proficiency, languages(id, name)").eq("profile_id", profile.id),
+    supabase.from("profile_languages").select("level, languages(id, name)").eq("profile_id", profile.id),
     supabase.from("profile_identifiers").select("*").eq("profile_id", profile.id),
   ]);
 
@@ -71,7 +71,7 @@ export default async function EditarCurriculoPage({
     },
     education: education ?? [],
     experiences: experiences ?? [],
-    skills: (profileSkills ?? []).map((ps: any) => {
+    skills: (profileSkills ?? []).map((ps) => {
       const s = Array.isArray(ps.skills) ? ps.skills[0] : ps.skills;
       return {
         id: s?.id ?? "",
@@ -79,7 +79,7 @@ export default async function EditarCurriculoPage({
         category_name: s?.skill_categories?.name ?? null,
       };
     }).filter((s) => s.id),
-    projects: (projectMemberships ?? []).map((pm: any) => {
+    projects: (projectMemberships ?? []).map((pm) => {
       const p = Array.isArray(pm.projects) ? pm.projects[0] : pm.projects;
       return {
         id: p?.id ?? "",
@@ -92,7 +92,7 @@ export default async function EditarCurriculoPage({
         funding_source: p?.funding_source ?? null,
       };
     }).filter((p) => p.id),
-    publications: (authoredPubs ?? []).map((ap: any) => {
+    publications: (authoredPubs ?? []).map((ap) => {
       const pub = Array.isArray(ap.publications) ? ap.publications[0] : ap.publications;
       return {
         id: pub?.id ?? "",
@@ -106,12 +106,12 @@ export default async function EditarCurriculoPage({
     }).filter((pub) => pub.id),
     certifications: certifications ?? [],
     awards: awards ?? [],
-    languages: (profileLanguages ?? []).map((pl: any) => {
+    languages: (profileLanguages ?? []).map((pl) => {
       const lang = Array.isArray(pl.languages) ? pl.languages[0] : pl.languages;
       return {
         id: lang?.id ?? "",
         name: lang?.name ?? "",
-        proficiency: pl.proficiency ?? "Básico",
+        proficiency: pl.level ?? "Básico",
       };
     }).filter((l) => l.id),
     identifiers: identifiers ?? [],
@@ -119,10 +119,10 @@ export default async function EditarCurriculoPage({
 
   // Snapshot Inicial mais recente da versão
   const sortedVersions = (curriculum.curriculum_versions ?? []).sort(
-    (a: any, b: any) => b.version - a.version
+    (a, b) => b.version - a.version
   );
 
-  const initialSnapshot: CurriculumSnapshot = sortedVersions[0]?.snapshot || {
+  const initialSnapshot = parseCurriculumSnapshot(sortedVersions[0]?.snapshot, {
     template: curriculum.template || "UNIKIVI_CLASSIC",
     custom_title: profile.professional_name || profile.full_name,
     custom_summary: curriculum.summary || profile.bio || "",
@@ -136,7 +136,7 @@ export default async function EditarCurriculoPage({
       show_photo: true,
       show_contacts: true,
     },
-  };
+  });
 
   return (
     <CurriculumEditor

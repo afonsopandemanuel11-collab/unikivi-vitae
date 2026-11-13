@@ -25,31 +25,31 @@ export default async function DashboardPage() {
 
   // Agregação de dados reais em paralelo para alta performance
   const [
-    { data: education, count: educationCount },
-    { data: experiences, count: experiencesCount },
-    { data: profileSkills, count: skillsCount },
+    { count: educationCount },
+    { count: experiencesCount },
+    { count: skillsCount },
     { data: projectMemberships, count: projectsCount },
     { data: authoredPubs, count: publicationsCount },
-    { data: certifications, count: certificationsCount },
-    { data: awards, count: awardsCount },
+    { count: certificationsCount },
+    { count: awardsCount },
     { data: curricula, count: curriculaCount },
-    { data: identifiers, count: identifiersCount },
+    { count: identifiersCount },
     { data: otherProfiles },
   ] = await Promise.all([
-    supabase.from("education").select("id, degree, course, institution, start_year, end_year", { count: "exact" }).eq("profile_id", profile.id).order("start_year", { ascending: false }),
-    supabase.from("experiences").select("id, position, organization, start_date, end_date, is_current", { count: "exact" }).eq("profile_id", profile.id).order("start_date", { ascending: false }),
-    supabase.from("profile_skills").select("skills(id, name)", { count: "exact" }).eq("profile_id", profile.id),
+    supabase.from("education").select("id", { count: "exact", head: true }).eq("profile_id", profile.id),
+    supabase.from("experiences").select("id", { count: "exact", head: true }).eq("profile_id", profile.id),
+    supabase.from("profile_skills").select("id", { count: "exact", head: true }).eq("profile_id", profile.id),
     supabase.from("project_members").select("role, projects(id, title, status, start_date, end_date)", { count: "exact" }).eq("profile_id", profile.id),
     supabase.from("publication_authors").select("publications(id, title, journal, year, publication_type, created_at)", { count: "exact" }).eq("profile_id", profile.id),
-    supabase.from("certifications").select("id, name, issuer", { count: "exact" }).eq("profile_id", profile.id),
-    supabase.from("awards").select("id, title, issuer", { count: "exact" }).eq("profile_id", profile.id),
+    supabase.from("certifications").select("id", { count: "exact", head: true }).eq("profile_id", profile.id),
+    supabase.from("awards").select("id", { count: "exact", head: true }).eq("profile_id", profile.id),
     supabase.from("curricula").select("id, title, template, status, updated_at, created_at", { count: "exact" }).eq("profile_id", profile.id).order("updated_at", { ascending: false }),
-    supabase.from("profile_identifiers").select("id, identifier_type, identifier_value", { count: "exact" }).eq("profile_id", profile.id),
+    supabase.from("profile_identifiers").select("id", { count: "exact", head: true }).eq("profile_id", profile.id),
     supabase.from("profiles").select("id, full_name, photo_url, position:positions(name), department:departments(name), faculty:faculties(name), status").neq("id", profile.id).limit(6),
   ]);
 
   // Normalização de Projetos
-  const normalizedProjects = (projectMemberships ?? []).map((pm: any) => {
+  const normalizedProjects = (projectMemberships ?? []).map((pm) => {
     const p = Array.isArray(pm.projects) ? pm.projects[0] : pm.projects;
     return {
       id: p?.id ?? "",
@@ -60,7 +60,7 @@ export default async function DashboardPage() {
   }).filter((p) => p.id);
 
   // Normalização de Publicações
-  const normalizedPubs = (authoredPubs ?? []).map((ap: any) => {
+  const normalizedPubs = (authoredPubs ?? []).map((ap) => {
     const pub = Array.isArray(ap.publications) ? ap.publications[0] : ap.publications;
     return {
       id: pub?.id ?? "",
@@ -125,7 +125,7 @@ export default async function DashboardPage() {
   completionPercent = Math.min(100, completionPercent);
 
   // Mapeamento de membros da rede reais
-  const networkMembers: NetworkMember[] = (otherProfiles ?? []).map((p: any) => {
+  const networkMembers: NetworkMember[] = (otherProfiles ?? []).map((p) => {
     const pos = Array.isArray(p.position) ? p.position[0]?.name : p.position?.name;
     const dep = Array.isArray(p.department) ? p.department[0]?.name : p.department?.name;
     return {

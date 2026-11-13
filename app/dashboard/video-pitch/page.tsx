@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import VideoPitchForm from "@/components/VideoPitch/VideoPitchForm";
+import VideoPitchForm from "@/components/video-pitch/VideoPitchForm";
 
 export default async function VideoPitchPage() {
   const supabase = await createClient();

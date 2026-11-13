@@ -2,6 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import type { Enums } from "@/lib/supabase/database.types";
+
+const CURRICULUM_TEMPLATES = ["UNIKIVI_CLASSIC", "MODERN_EDITORIAL", "CIENCIA_VITAE", "EXECUTIVE", "ACADEMIC_COMPACT"] as const satisfies readonly Enums<"curriculum_template_enum">[];
+
+function curriculumTemplate(value: string): Enums<"curriculum_template_enum"> {
+  return CURRICULUM_TEMPLATES.includes(value as Enums<"curriculum_template_enum">)
+    ? value as Enums<"curriculum_template_enum">
+    : "UNIKIVI_CLASSIC";
+}
 
 export type CurriculumSnapshot = {
   template: string;
@@ -62,6 +71,7 @@ export async function createCurriculum(
     .eq("profile_id", profileId);
 
   const isDefault = count === 0;
+  const template = curriculumTemplate(data.template);
 
   // Secções padrão de acordo com o modelo/objetivo
   const defaultSections = data.selectedSections && data.selectedSections.length > 0
@@ -79,7 +89,7 @@ export async function createCurriculum(
       profile_id: profileId,
       title: data.title.trim(),
       summary: ownProfile.bio || null,
-      template: data.template || "UNIKIVI_CLASSIC",
+      template,
       status: "DRAFT",
       is_default: isDefault,
       language: "pt",
@@ -265,7 +275,7 @@ export async function saveCurriculumSnapshot(
   const { error: updateError } = await supabase
     .from("curricula")
     .update({
-      template: snapshot.template,
+      template: curriculumTemplate(snapshot.template),
       summary: summaryText || snapshot.custom_summary || null,
       current_version: nextVersion,
       updated_at: new Date().toISOString(),

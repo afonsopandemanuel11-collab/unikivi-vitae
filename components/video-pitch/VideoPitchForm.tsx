@@ -1,24 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { saveVideoPitch } from "@/app/dashboard/video-pitch/actions";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import type { Enums } from "@/lib/supabase/database.types";
 
-const VISIBILITY_OPTIONS = [
-  { value: "PUBLIC", label: "Público — visível a todos" },
-  { value: "REGISTERED", label: "Registados — apenas utilizadores com conta" },
-  { value: "PRIVATE", label: "Privado — apenas eu" },
-];
-
-function extractYouTubeId(url: string): string | null {
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
+const MAX_DURATION_SECONDS = 180; // 3 minutos
+const MAX_FILE_SIZE = 200 * 1024 * 1024; // 200MB
 
 export default function VideoPitchForm({
   userId,
@@ -27,137 +15,198 @@ export default function VideoPitchForm({
   currentVisibility,
 }: {
   userId: string;
-  currentUrl?: string | null;
-  currentTitle?: string | null;
-  currentVisibility?: string | null;
+  currentUrl: string | null;
+  currentTitle: string | null;
+  currentVisibility: string | null;
 }) {
-  const [url, setUrl] = useState(currentUrl ?? "");
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(currentUrl);
   const [title, setTitle] = useState(currentTitle ?? "");
-  const [visibility, setVisibility] = useState(currentVisibility ?? "PUBLIC");
-  const [isPending, startTransition] = useTransition();
-  const [success, setSuccess] = useState(false);
+  const [visibility, setVisibility] = useState<Enums<"visibility_enum">>(
+    currentVisibility === "INSTITUTIONAL" || currentVisibility === "RESTRICTED" || currentVisibility === "PRIVATE"
+      ? currentVisibility
+      : "PUBLIC"
+  );
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const youtubeId = url ? extractYouTubeId(url) : null;
-  const previewUrl = youtubeId ? `https://www.youtube.com/embed/${youtubeId}` : null;
+  function validateAndSetFile(selected: File) {
+    setError(null);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (!["video/mp4", "video/webm"].includes(selected.type)) {
+      setError("O ficheiro tem de ser MP4 ou WebM.");
+      return;
+    }
+    if (selected.size > MAX_FILE_SIZE) {
+      setError("O video excede o limite de 200MB.");
+      return;
+    }
+
+    // valida a duracao antes de aceitar o ficheiro
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(video.src);
+      if (video.duration > MAX_DURATION_SECONDS) {
+        setError("O video excede o limite de 3 minutos.");
+        return;
+      }
+      setFile(selected);
+      setPreview(URL.createObjectURL(selected));
+    };
+    video.src = URL.createObjectURL(selected);
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selected = e.target.files?.[0];
+    if (selected) validateAndSetFile(selected);
+  }
+
+  function handleDrop(e: React.DragEvent<HTMLElement>) {
     e.preventDefault();
+    const selected = e.dataTransfer.files?.[0];
+    if (selected) validateAndSetFile(selected);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!file && !currentUrl) {
+      setError("Selecione um video para carregar.");
+      return;
+    }
+
+    setUploading(true);
     setError(null);
     setSuccess(false);
 
-    const formData = new FormData();
-    formData.set("video_pitch_url", url);
-    formData.set("video_pitch_title", title);
-    formData.set("video_pitch_visibility", visibility);
+    const supabase = createClient();
+    let videoUrl = currentUrl;
 
-    startTransition(async () => {
-      const result = await saveVideoPitch(formData);
-      if (result.success) {
-        setSuccess(true);
-        setTimeout(() => setSuccess(false), 4000);
-      } else {
-        setError(result.error ?? "Não foi possível guardar o video pitch.");
+    if (file) {
+      const ext = file.name.split(".").pop();
+      const path = `${userId}/pitch.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("pitches")
+        .upload(path, file, { upsert: true });
+
+      if (uploadError) {
+        setError("Nao foi possivel carregar o video.");
+        setUploading(false);
+        return;
       }
-    });
+
+      const { data: urlData } = supabase.storage.from("pitches").getPublicUrl(path);
+      videoUrl = urlData.publicUrl;
+    }
+
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update({
+        video_pitch_url: videoUrl,
+        video_pitch_title: title || null,
+        video_pitch_visibility: visibility,
+      })
+      .eq("user_id", userId);
+
+    if (updateError) {
+      setError("Video carregado, mas houve um erro ao guardar os dados.");
+      setUploading(false);
+      return;
+    }
+
+    setSuccess(true);
+    setFile(null);
+    setUploading(false);
+    router.refresh();
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-outline-variant p-6 space-y-6">
-      <h2 className="font-headline-md text-headline-md text-primary text-lg flex items-center gap-2">
-        <span className="material-symbols-outlined">videocam</span>
-        Configurar Video Pitch
-      </h2>
-
-      {success && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-lg flex items-center gap-2">
-          <span className="material-symbols-outlined text-emerald-600">check_circle</span>
-          <span>Video Pitch guardado com sucesso!</span>
-        </div>
-      )}
-
-      {error && (
-        <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-sm rounded-lg flex items-center gap-2">
-          <span className="material-symbols-outlined text-red-600">error</span>
-          <span>{error}</span>
-        </div>
-      )}
-
-      {/* Preview */}
-      {previewUrl ? (
-        <div className="rounded-xl overflow-hidden aspect-video border border-outline-variant">
-          <iframe
-            src={previewUrl}
-            title="Video Pitch Preview"
-            allowFullScreen
-            className="w-full h-full"
-          />
-        </div>
-      ) : (
-        <div className="rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-low aspect-video flex flex-col items-center justify-center gap-3 text-on-surface-variant">
-          <span className="material-symbols-outlined text-5xl opacity-40">play_circle</span>
-          <p className="font-body-md text-sm">A pré-visualização aparecerá aqui após inserir um link do YouTube</p>
-        </div>
-      )}
-
-      {/* URL */}
-      <div>
-        <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">
-          URL do Vídeo (YouTube)
-        </label>
+    <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-outline-variant p-6">
+      <label
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={handleDrop}
+        className="block relative w-full aspect-video border-2 border-dashed border-outline-variant rounded-xl bg-surface-container-low flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors mb-6 overflow-hidden"
+      >
+        {preview ? (
+          <video src={preview} controls className="w-full h-full object-cover" />
+        ) : (
+          <>
+            <span className="material-symbols-outlined text-4xl text-outline mb-2">
+              cloud_upload
+            </span>
+            <p className="font-bold text-primary">Carregar ou Gravar Video</p>
+            <p className="text-sm text-on-surface-variant text-center mt-1 px-4">
+              Arraste um ficheiro MP4/WebM ou clique para selecionar.
+              Maximo 3 minutos.
+            </p>
+          </>
+        )}
         <input
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="Ex: https://www.youtube.com/watch?v=..."
-          className="w-full border border-outline-variant rounded-lg p-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary transition-colors"
+          ref={fileInputRef}
+          type="file"
+          accept="video/mp4,video/webm"
+          onChange={handleFileChange}
+          className="absolute inset-0 opacity-0 cursor-pointer"
         />
-        <p className="text-xs text-on-surface-variant mt-1.5">
-          Suporta links do YouTube (watch, youtu.be, embed)
-        </p>
-      </div>
+      </label>
 
-      {/* Title */}
-      <div>
+      <div className="mb-6">
         <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">
-          Título do Pitch (Opcional)
+          Titulo do Video Pitch
         </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Ex: Impacto da IA na Medicina Preventiva"
-          maxLength={120}
-          className="w-full border border-outline-variant rounded-lg p-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary transition-colors"
+          placeholder="Ex: Impacto da IA na Pesquisa Medica..."
+          className="w-full border-0 border-b-2 border-outline-variant bg-transparent py-2 font-body-md text-body-md focus:outline-none focus:border-secondary transition-colors"
         />
       </div>
 
-      {/* Visibility */}
-      <div>
-        <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">
+      <div className="mb-8">
+        <label className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-3">
           Visibilidade
         </label>
-        <select
-          value={visibility}
-          onChange={(e) => setVisibility(e.target.value)}
-          className="w-full border border-outline-variant rounded-lg p-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary transition-colors bg-white"
-        >
-          {VISIBILITY_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        <div className="flex gap-6">
+          <label className="flex items-center gap-2 text-sm text-on-surface cursor-pointer">
+            <input
+              type="radio"
+              name="visibility"
+              checked={visibility === "PUBLIC"}
+              onChange={() => setVisibility("PUBLIC")}
+            />
+            Publico
+          </label>
+          <label className="flex items-center gap-2 text-sm text-on-surface cursor-pointer">
+            <input
+              type="radio"
+              name="visibility"
+              checked={visibility === "INSTITUTIONAL"}
+              onChange={() => setVisibility("INSTITUTIONAL")}
+            />
+            Apenas Rede UNIKIVI
+          </label>
+        </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg font-medium text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
-      >
-        <span className="material-symbols-outlined text-lg">save</span>
-        {isPending ? "A guardar..." : "Guardar Video Pitch"}
-      </button>
+      {error && <p className="text-error text-sm font-body-md mb-4">{error}</p>}
+      {success && <p className="text-secondary text-sm font-body-md mb-4">Video pitch guardado.</p>}
+
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          disabled={uploading}
+          className="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-container transition-colors disabled:opacity-50"
+        >
+          {uploading ? "A carregar..." : "Salvar Video Pitch"}
+        </button>
+      </div>
     </form>
   );
 }

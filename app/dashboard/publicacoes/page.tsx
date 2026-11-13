@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import PublicationsForm from "@/components/Publications/PublicationsForm";
-import PublicationsList from "@/components/Publications/PublicationsList";
+import PublicationsForm from "@/components/publications/PublicationsForm";
+import PublicationsList from "@/components/publications/PublicationsList";
 
 export default async function PublicacoesPage() {
   const supabase = await createClient();
@@ -26,7 +26,7 @@ export default async function PublicacoesPage() {
     .eq("profile_id", profile.id);
 
   const publicationIds = (authored ?? [])
-    .map((a: any) => (Array.isArray(a.publications) ? a.publications[0]?.id : a.publications?.id))
+    .map((a) => (Array.isArray(a.publications) ? a.publications[0]?.id : a.publications?.id))
     .filter(Boolean);
 
   const { data: allAuthors } = publicationIds.length

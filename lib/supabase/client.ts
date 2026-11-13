@@ -1,4 +1,5 @@
 import { createBrowserClient } from "@supabase/ssr";
+import type { Database } from "@/lib/supabase/database.types";
 
 export function createClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -14,5 +15,5 @@ export function createClient() {
   // sincroniza automaticamente os cookies de sessão com o middleware,
   // garante que o JWT está sempre actualizado após signUp/signIn,
   // e é thread-safe (cria singleton internamente quando chamado com os mesmos args).
-  return createBrowserClient(supabaseUrl, supabaseAnonKey);
+  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
 }

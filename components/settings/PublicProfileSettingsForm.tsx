@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import type { Enums, Json, Tables } from "@/lib/supabase/database.types";
 
 const FIELDS = [
   { key: "photo", label: "Fotografia de Perfil", icon: "account_circle" },
@@ -14,25 +15,24 @@ const FIELDS = [
   { key: "publications", label: "Publicacoes", icon: "menu_book" },
 ];
 
-const VISIBILITY_OPTIONS = [
+const VISIBILITY_OPTIONS: { value: Enums<"visibility_enum">; label: string; description: string }[] = [
   { value: "PUBLIC", label: "Todos", description: "O seu perfil e publico e indexavel por motores de busca externos." },
   { value: "INSTITUTIONAL", label: "Apenas registados", description: "Visivel apenas para membros autenticados da rede UNIKIVI Vitae." },
   { value: "PRIVATE", label: "Ninguem", description: "O seu perfil esta oculto e funciona apenas como arquivo pessoal." },
 ];
 
-export default function PublicProfileSettingsForm({ profile }: { profile: any }) {
-  const [visibility, setVisibility] = useState(profile.visibility ?? "INSTITUTIONAL");
-  const [fieldVisibility, setFieldVisibility] = useState<Record<string, boolean>>(
-    profile.field_visibility ?? {}
-  );
+function fieldVisibilityMap(value: Json | null): Record<string, boolean> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(Object.entries(value).filter((entry): entry is [string, boolean] => typeof entry[1] === "boolean"));
+}
+
+export default function PublicProfileSettingsForm({ profile }: { profile: Pick<Tables<"profiles">, "id" | "user_id" | "visibility" | "field_visibility"> }) {
+  const [visibility, setVisibility] = useState<Enums<"visibility_enum">>(profile.visibility ?? "INSTITUTIONAL");
+  const [fieldVisibility, setFieldVisibility] = useState<Record<string, boolean>>(fieldVisibilityMap(profile.field_visibility));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const publicUrl = `unikivi-vitae.com/perfil/${profile.id}`;
-
-  function toggleField(key: string) {
-    setFieldVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
-  }
 
   async function handleSave() {
     setSaving(true);

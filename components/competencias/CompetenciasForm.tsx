@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import type { Enums } from "@/lib/supabase/database.types";
 
-const LEVELS = [
+const LEVELS: { value: Enums<"skill_level_enum">; label: string }[] = [
   { value: "BASIC", label: "Basico" },
   { value: "INTERMEDIATE", label: "Intermediario" },
   { value: "ADVANCED", label: "Avancado" },
@@ -33,10 +34,7 @@ export default function CompetenciasForm({
 
   // pesquisa de skills — filtra por nome e, se escolhida, por categoria
   useEffect(() => {
-    if (search.length < 2) {
-      setResults([]);
-      return;
-    }
+    if (search.length < 2) return;
 
     const timeout = setTimeout(async () => {
       const supabase = createClient();
@@ -56,6 +54,7 @@ export default function CompetenciasForm({
 
     return () => clearTimeout(timeout);
   }, [search, categoryId]);
+  const visibleResults = search.length < 2 ? [] : results;
 
   async function handleAdd() {
     if (!selectedSkill) {
@@ -130,7 +129,7 @@ export default function CompetenciasForm({
           />
           {results.length > 0 && !selectedSkill && (
             <ul className="absolute z-10 w-full mt-1 bg-white border border-outline-variant rounded-lg shadow-lg max-h-48 overflow-y-auto">
-              {results.map((r) => (
+              {visibleResults.map((r) => (
                 <li key={r.id}>
                   <button
                     type="button"

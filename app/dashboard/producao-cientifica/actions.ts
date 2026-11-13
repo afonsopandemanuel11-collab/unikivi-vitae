@@ -2,6 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { formString, optionalFormString } from "@/lib/form-data";
+import type { Enums } from "@/lib/supabase/database.types";
+
+const PUBLICATION_TYPES = ["ARTICLE", "CONFERENCE", "BOOK", "BOOK_CHAPTER", "THESIS", "REPORT", "PREPRINT", "OTHER"] as const satisfies readonly Enums<"publication_type_enum">[];
 
 export async function addPublication(profileId: string, formData: FormData) {
   const supabase = await createClient();
@@ -19,11 +23,13 @@ export async function addPublication(profileId: string, formData: FormData) {
   const { data: publication, error: pubError } = await supabase
     .from("publications")
     .insert({
-      title: formData.get("title"),
-      journal: formData.get("journal") || null,
-      year: formData.get("year") ? Number(formData.get("year")) : null,
-      doi: formData.get("doi") || null,
-      publication_type: formData.get("publication_type") || "ARTICLE",
+      title: formString(formData, "title"),
+      journal: optionalFormString(formData, "journal"),
+      year: formString(formData, "year") ? Number(formString(formData, "year")) : null,
+      doi: optionalFormString(formData, "doi"),
+      publication_type: PUBLICATION_TYPES.includes(formString(formData, "publication_type") as Enums<"publication_type_enum">)
+        ? formString(formData, "publication_type") as Enums<"publication_type_enum">
+        : "ARTICLE",
     })
     .select("id")
     .single();

@@ -152,7 +152,7 @@ export default function CurriculumDashboard({
           ].map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
+              onClick={() => setActiveTab(tab.key as typeof activeTab)}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors shrink-0 ${
                 activeTab === tab.key
                   ? "bg-primary text-white"
@@ -337,7 +337,7 @@ export default function CurriculumDashboard({
 
             <p className="text-sm text-on-surface-variant mb-4">
               Pode partilhar o link de visualização direta do currículo{" "}
-              <strong>"{shareCurriculum.title}"</strong>.
+              <strong>&quot;{shareCurriculum.title}&quot;</strong>.
             </p>
 
             <div className="flex items-center gap-2 p-2.5 bg-surface-container-low rounded-xl border border-outline-variant mb-4">

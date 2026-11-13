@@ -2,6 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { formString, optionalFormString } from "@/lib/form-data";
+import type { Enums, TablesUpdate } from "@/lib/supabase/database.types";
+
+const VISIBILITIES = ["PUBLIC", "INSTITUTIONAL", "RESTRICTED", "PRIVATE"] as const satisfies readonly Enums<"visibility_enum">[];
 
 export type UpdatePersonalDataResult = { success: boolean; error?: string };
 
@@ -29,19 +33,22 @@ export async function updatePersonalData(formData: FormData): Promise<UpdatePers
     photo_url = publicUrlData.publicUrl;
   }
 
-  const updates: Record<string, unknown> = {
-    full_name: formData.get("full_name"),
-    professional_name: formData.get("professional_name") || null,
-    bio: formData.get("bio") || null,
-    institutional_email: formData.get("institutional_email") || null,
-    phone: formData.get("phone") || null,
-    nationality: formData.get("nationality") || null,
-    birth_year: formData.get("birth_year") ? Number(formData.get("birth_year")) : null,
-    gender: formData.get("gender") || null,
-    faculty_id: formData.get("faculty_id") || null,
-    department_id: formData.get("department_id") || null,
-    position_id: formData.get("position_id") || null,
-    visibility: formData.get("visibility") || "PUBLIC",
+  const submittedVisibility = formString(formData, "visibility");
+  const updates: TablesUpdate<"profiles"> = {
+    full_name: formString(formData, "full_name"),
+    professional_name: optionalFormString(formData, "professional_name"),
+    bio: optionalFormString(formData, "bio"),
+    institutional_email: optionalFormString(formData, "institutional_email"),
+    phone: optionalFormString(formData, "phone"),
+    nationality: optionalFormString(formData, "nationality"),
+    birth_year: formString(formData, "birth_year") ? Number(formString(formData, "birth_year")) : null,
+    gender: optionalFormString(formData, "gender"),
+    faculty_id: optionalFormString(formData, "faculty_id"),
+    department_id: optionalFormString(formData, "department_id"),
+    position_id: optionalFormString(formData, "position_id"),
+    visibility: VISIBILITIES.includes(submittedVisibility as Enums<"visibility_enum">)
+      ? submittedVisibility as Enums<"visibility_enum">
+      : "PUBLIC",
   };
 
   if (photo_url) updates.photo_url = photo_url;

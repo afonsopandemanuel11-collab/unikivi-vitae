@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import type { Tables } from "@/lib/supabase/database.types";
 
-export default function DangerZoneForm({ profile }: { profile: any }) {
+export default function DangerZoneForm({ profile }: { profile: Pick<Tables<"profiles">, "id" | "user_id" | "status"> }) {
   const router = useRouter();
   const [deactivating, setDeactivating] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type ProfileCardProps = {
   profile: {
@@ -39,9 +40,12 @@ export default function ProfileCard({ profile }: ProfileCardProps) {
     <article className="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6 shadow-[0_10px_20px_rgba(0,0,0,0.04)] hover:shadow-md transition-shadow flex flex-col justify-between group">
       <div>
         <div className="flex items-start gap-4 mb-4">
-          <img
+          <Image
             src={profile.photo_url || "/images/avatar-placeholder.png"}
             alt={displayName}
+            width={64}
+            height={64}
+            unoptimized
             className="w-16 h-16 rounded-full object-cover border border-outline-variant shadow-sm"
           />
           <div>

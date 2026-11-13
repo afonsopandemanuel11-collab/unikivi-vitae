@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { addPublication } from "@/app/dashboard/publicacoes/actions";
+import type { Enums } from "@/lib/supabase/database.types";
 
-const TYPES = [
+const TYPES: { value: Enums<"publication_type_enum">; label: string }[] = [
   { value: "ARTICLE", label: "Artigo" },
   { value: "BOOK", label: "Livro" },
-  { value: "CONFERENCE_PAPER", label: "Conferência" },
+  { value: "CONFERENCE", label: "Conferência" },
 ];
 
 export default function PublicationsForm({ profileId }: { profileId: string }) {
@@ -17,7 +18,7 @@ export default function PublicationsForm({ profileId }: { profileId: string }) {
   const [title, setTitle] = useState("");
   const [journal, setJournal] = useState("");
   const [year, setYear] = useState("");
-  const [publicationType, setPublicationType] = useState("ARTICLE");
+  const [publicationType, setPublicationType] = useState<Enums<"publication_type_enum">>("ARTICLE");
   const [coAuthors, setCoAuthors] = useState<string[]>([""]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,8 +32,15 @@ export default function PublicationsForm({ profileId }: { profileId: string }) {
     try {
       const res = await fetch(`https://api.crossref.org/works/${encodeURIComponent(doi.trim())}`);
       if (!res.ok) throw new Error("DOI não encontrado.");
-      const data = await res.json();
+      const data = await res.json() as { message?: {
+        title?: string[];
+        "container-title"?: string[];
+        published?: { "date-parts"?: number[][] };
+        "published-print"?: { "date-parts"?: number[][] };
+        author?: { given?: string; family?: string }[];
+      } };
       const work = data.message;
+      if (!work) throw new Error("Resposta do Crossref sem dados da publicação.");
 
       setTitle(work.title?.[0] ?? "");
       setJournal(work["container-title"]?.[0] ?? "");
@@ -43,7 +51,7 @@ export default function PublicationsForm({ profileId }: { profileId: string }) {
       );
 
       const authors = (work.author ?? [])
-        .map((a: any) => `${a.given ?? ""} ${a.family ?? ""}`.trim())
+        .map((a) => `${a.given ?? ""} ${a.family ?? ""}`.trim())
         .filter(Boolean);
       if (authors.length > 0) setCoAuthors(authors);
     } catch {
@@ -165,7 +173,7 @@ export default function PublicationsForm({ profileId }: { profileId: string }) {
         </label>
         <select
           value={publicationType}
-          onChange={(e) => setPublicationType(e.target.value)}
+          onChange={(e) => setPublicationType(e.target.value as Enums<"publication_type_enum">)}
           className="w-full border border-outline-variant rounded-lg p-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary transition-colors"
         >
           {TYPES.map((t) => (

@@ -1,5 +1,6 @@
 // components/landing/ExploreSection.tsx
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function ExploreSection() {
@@ -55,13 +56,13 @@ export default async function ExploreSection() {
 
             <div className="space-y-3">
               {displayProfiles.length > 0
-                ? displayProfiles.map((p: any) => {
+                ? displayProfiles.map((p) => {
                     const name = p.professional_name || p.full_name;
                     const pos = Array.isArray(p.position) ? p.position[0] : p.position;
                     const initials = name
                       .split(" ")
                       .slice(0, 2)
-                      .map((n: string) => n[0])
+                      .map((n) => n[0])
                       .join("")
                       .toUpperCase();
                     return (
@@ -71,7 +72,7 @@ export default async function ExploreSection() {
                         className="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors group"
                       >
                         {p.photo_url ? (
-                          <img src={p.photo_url} alt={name} className="w-10 h-10 rounded-full object-cover border-2 border-white/30 shrink-0" />
+                          <Image src={p.photo_url} alt={name} width={40} height={40} unoptimized className="w-10 h-10 rounded-full object-cover border-2 border-white/30 shrink-0" />
                         ) : (
                           <div className="w-10 h-10 rounded-full bg-white/20 text-white font-bold flex items-center justify-center text-sm shrink-0">
                             {initials}

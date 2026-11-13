@@ -118,9 +118,12 @@ export default function DashboardShell({
           <div className="relative mb-3">
             <div className="w-20 h-20 rounded-full overflow-hidden border-3 border-white shadow-md bg-surface-container flex items-center justify-center">
               {profile.photo_url ? (
-                <img
+                <Image
                   src={profile.photo_url}
                   alt={profile.full_name}
+                  width={80}
+                  height={80}
+                  unoptimized
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -324,7 +327,7 @@ export default function DashboardShell({
             title={profile.full_name}
           >
             {profile.photo_url ? (
-              <img src={profile.photo_url} alt={profile.full_name} className="w-full h-full object-cover" />
+              <Image src={profile.photo_url} alt={profile.full_name} width={80} height={80} unoptimized className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full bg-primary text-white flex items-center justify-center text-sm font-bold">
                 {profile.full_name.charAt(0)}

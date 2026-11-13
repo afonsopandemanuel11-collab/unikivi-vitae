@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import { updatePersonalData } from "@/app/dashboard/perfil/actions";
 
 type Profile = {
@@ -161,9 +162,12 @@ export default function PersonalDataForm({
 
             <div className="flex items-center gap-5 mb-6">
               <div className="w-16 h-16 rounded-full overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
-                <img
+                <Image
                   src={preview}
                   alt={profile.full_name}
+                  width={64}
+                  height={64}
+                  unoptimized
                   className="w-full h-full object-cover"
                 />
               </div>

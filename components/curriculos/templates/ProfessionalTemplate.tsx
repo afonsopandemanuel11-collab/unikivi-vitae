@@ -1,6 +1,7 @@
 "use client";
 
 import { TemplateProps } from "../types";
+import Image from "next/image";
 
 function fmtDate(dateStr?: string | null): string {
   if (!dateStr) return "";
@@ -126,9 +127,12 @@ export default function ProfessionalTemplate({ data, snapshot }: TemplateProps) 
               flexShrink: 0,
             }}
           >
-            <img
+            <Image
               src={profile.photo_url}
               alt={displayName}
+              width={240}
+              height={240}
+              unoptimized
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </div>

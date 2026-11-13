@@ -1,7 +1,8 @@
 // components/auth/steps/StepDados.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { ProfileType } from "./StepPerfil";
 
@@ -60,10 +61,13 @@ export default function StepDados({
   const [positions, setPositions] = useState<Option[]>([]);
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const photoPreviewUrl = useRef<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
 
   const showAcademicUnit = NEEDS_ACADEMIC_UNIT.includes(profileType);
   const showPosition = NEEDS_POSITION.includes(profileType);
+  const visibleFaculties = showAcademicUnit ? faculties : [];
+  const visibleDepartments = value.facultyId ? departments : [];
 
   function set<K extends keyof DadosState>(key: K, v: DadosState[K]) {
     onChange({ ...value, [key]: v });
@@ -72,7 +76,6 @@ export default function StepDados({
   // carrega faculdades (só se o tipo precisar)
   useEffect(() => {
     if (!showAcademicUnit) {
-      setFaculties([]);
       return;
     }
 
@@ -101,7 +104,6 @@ export default function StepDados({
   // recarrega departamentos sempre que a faculdade muda
   useEffect(() => {
     if (!value.facultyId) {
-      setDepartments([]);
       return;
     }
     const supabase = createClient();
@@ -150,32 +152,38 @@ export default function StepDados({
 
   // regenera a pré-visualização da foto sempre que o ficheiro muda
   useEffect(() => {
-    if (!value.photoFile) {
-      setPhotoPreview(null);
-      return;
-    }
-    const url = URL.createObjectURL(value.photoFile);
-    setPhotoPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [value.photoFile]);
+    return () => {
+      if (photoPreviewUrl.current) URL.revokeObjectURL(photoPreviewUrl.current);
+    };
+  }, []);
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
     setPhotoError(null);
 
-    if (!file) return;
+    if (!file) {
+      if (photoPreviewUrl.current) URL.revokeObjectURL(photoPreviewUrl.current);
+      photoPreviewUrl.current = null;
+      setPhotoPreview(null);
+      set("photoFile", null);
+      return;
+    }
 
     if (file.size > MAX_PHOTO_SIZE) {
       setPhotoError("A imagem excede o limite de 5MB.");
       e.target.value = "";
       return;
     }
+
     if (!file.type.startsWith("image/")) {
       setPhotoError("O ficheiro tem de ser uma imagem (JPG ou PNG).");
       e.target.value = "";
       return;
     }
 
+    if (photoPreviewUrl.current) URL.revokeObjectURL(photoPreviewUrl.current);
+    photoPreviewUrl.current = URL.createObjectURL(file);
+    setPhotoPreview(photoPreviewUrl.current);
     set("photoFile", file);
   }
 
@@ -205,7 +213,7 @@ export default function StepDados({
           <div className="flex flex-col sm:flex-row items-center gap-8">
             <label className="relative w-32 h-32 rounded-full border-2 border-dashed border-outline-variant bg-surface-container flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors group overflow-hidden">
               {photoPreview ? (
-                <img src={photoPreview} alt="" className="w-full h-full object-cover" />
+                <Image src={photoPreview} alt="Pré-visualização da fotografia" width={320} height={320} unoptimized className="h-full w-full object-cover" />
               ) : (
                 <>
                   <span className="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors text-3xl">
@@ -304,7 +312,7 @@ export default function StepDados({
                 label="Faculdade"
                 value={value.facultyId}
                 onChange={(v) => onChange({ ...value, facultyId: v, departmentId: "" })}
-                options={faculties}
+                options={visibleFaculties}
                 required={profileType !== "RESEARCHER"}
                 placeholder="Selecione a faculdade"
               />
@@ -313,7 +321,7 @@ export default function StepDados({
                   label="Departamento"
                   value={value.departmentId}
                   onChange={(v) => set("departmentId", v)}
-                  options={departments}
+                  options={visibleDepartments}
                   required={profileType !== "RESEARCHER"}
                   placeholder="Selecione o departamento"
                 />

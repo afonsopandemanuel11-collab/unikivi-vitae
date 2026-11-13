@@ -1,7 +1,8 @@
 // components/dashboard/TeacherDashboard.tsx
 // PLACEHOLDER — será substituído pelo design fiel do Google Stitch.
+import type { Tables } from "@/lib/supabase/database.types";
 
-export default function TeacherDashboard({ profile }: { profile: any }) {
+export default function TeacherDashboard({ profile }: { profile: Pick<Tables<"profiles">, "status"> }) {
   return (
     <div className="space-y-6">
       {/* Linha 1 — métricas rápidas */}

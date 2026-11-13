@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import IdentifiersManager from "@/components/IdentifiersManager/IdentifiersManager";
+import IdentifiersManager from "@/components/identifiers-manager/IdentifiersManager";
 
 export default async function IdentificadoresPage() {
   const supabase = await createClient();

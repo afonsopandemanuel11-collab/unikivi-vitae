@@ -2,6 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { formString } from "@/lib/form-data";
+import type { Enums } from "@/lib/supabase/database.types";
+
+const VISIBILITIES = ["PUBLIC", "INSTITUTIONAL", "RESTRICTED", "PRIVATE"] as const satisfies readonly Enums<"visibility_enum">[];
 
 export async function saveVideoPitch(formData: FormData) {
   const supabase = await createClient();
@@ -11,9 +15,12 @@ export async function saveVideoPitch(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Utilizador não autenticado." };
 
-  const url = (formData.get("video_pitch_url") as string)?.trim() || null;
-  const title = (formData.get("video_pitch_title") as string)?.trim() || null;
-  const visibility = (formData.get("video_pitch_visibility") as string) || "PUBLIC";
+  const url = formString(formData, "video_pitch_url") || null;
+  const title = formString(formData, "video_pitch_title") || null;
+  const submittedVisibility = formString(formData, "video_pitch_visibility");
+  const visibility = VISIBILITIES.includes(submittedVisibility as Enums<"visibility_enum">)
+    ? submittedVisibility as Enums<"visibility_enum">
+    : "PUBLIC";
 
   const { error } = await supabase
     .from("profiles")

@@ -3,6 +3,9 @@ import FilterSidebar from "@/components/pesquisa/FilterSidebar";
 import SearchInput from "@/components/pesquisa/SearchInput";
 import ProfileCard from "@/components/pesquisa/ProfileCard";
 import PromoBanner from "@/components/pesquisa/PromoBanner";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import type { Enums } from "@/lib/supabase/database.types";
 import Link from "next/link";
 
 const PAGE_SIZE = 24;
@@ -43,7 +46,13 @@ export default async function PesquisaPage({
     .range(0, currentLimit - 1);
 
   if (nome) query = query.ilike("full_name", `%${nome}%`);
-  if (tipo) query = query.in("profile_type", tipo.split(","));
+  if (tipo) {
+    const profileTypes = ["STUDENT", "TEACHER", "RESEARCHER", "PROFESSIONAL", "TALENT", "VISITOR", "ADMIN"] as const satisfies readonly Enums<"profile_type_enum">[];
+    const selectedTypes = tipo.split(",").filter((value): value is Enums<"profile_type_enum"> =>
+      profileTypes.includes(value as Enums<"profile_type_enum">)
+    );
+    if (selectedTypes.length) query = query.in("profile_type", selectedTypes);
+  }
   if (area) query = query.eq("profile_research_areas.research_area_id", area);
 
   const { data: profiles, count, error } = await query;
@@ -56,10 +65,12 @@ export default async function PesquisaPage({
   params.set("limit", String(currentLimit + PAGE_SIZE));
 
   return (
-    <main className="flex-grow w-full max-w-container-max mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
-      <FilterSidebar areas={areas ?? []} />
+    <>
+      <Navbar />
+      <main className="flex-grow w-full max-w-container-max mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
+        <FilterSidebar areas={areas ?? []} />
 
-      <section className="md:col-span-8 lg:col-span-9 flex flex-col space-y-6">
+        <section className="md:col-span-8 lg:col-span-9 flex flex-col space-y-6">
         <SearchInput />
 
         <div className="flex justify-between items-center py-2">
@@ -97,7 +108,9 @@ export default async function PesquisaPage({
             </Link>
           </div>
         )}
-      </section>
-    </main>
+        </section>
+      </main>
+      <Footer />
+    </>
   );
 }

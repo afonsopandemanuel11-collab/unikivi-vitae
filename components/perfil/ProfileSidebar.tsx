@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type ProfileSidebarProps = {
   profile: {
     full_name: string;
@@ -24,9 +26,11 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
     <aside className="lg:col-span-4 relative">
       <div className="sticky top-24 bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-[0_10px_20px_-5px_rgba(0,17,58,0.04)] overflow-hidden">
         <div className="w-full aspect-square relative">
-          <img
+          <Image
             src={profile.photo_url || "/images/avatar-placeholder.png"}
             alt={displayName}
+            fill
+            unoptimized
             className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

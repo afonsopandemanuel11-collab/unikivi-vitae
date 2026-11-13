@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { formString, optionalFormString } from "@/lib/form-data";
 
 export async function addEducation(profileId: string, formData: FormData) {
   const supabase = await createClient();
@@ -17,19 +18,19 @@ export async function addEducation(profileId: string, formData: FormData) {
     .single();
   if (!ownProfile) return { success: false, error: "Perfil inválido." };
 
-  const endYearRaw = formData.get("end_year") as string;
+  const endYearRaw = formString(formData, "end_year");
   const isOngoing = formData.get("is_ongoing") === "on";
 
   const { error } = await supabase.from("education").insert({
     profile_id: profileId,
-    degree: formData.get("degree"),
-    course: formData.get("course"),
-    institution: formData.get("institution"),
-    institution_country: formData.get("institution_country") || "Angola",
-    start_year: formData.get("start_year") ? Number(formData.get("start_year")) : null,
+    degree: formString(formData, "degree"),
+    course: formString(formData, "course"),
+    institution: formString(formData, "institution"),
+    institution_country: formString(formData, "institution_country") || "Angola",
+    start_year: formString(formData, "start_year") ? Number(formString(formData, "start_year")) : null,
     end_year: isOngoing || !endYearRaw ? null : Number(endYearRaw),
-    field_of_study: formData.get("field_of_study") || null,
-    description: formData.get("description") || null,
+    field_of_study: optionalFormString(formData, "field_of_study"),
+    description: optionalFormString(formData, "description"),
   });
 
   if (error) return { success: false, error: error.message };

@@ -2,6 +2,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import StepPerfil, { ProfileType } from "./steps/StepPerfil";
@@ -196,9 +197,12 @@ export default function RegisterWizard() {
           </p>
         </div>
         <div className="relative z-10 mt-12 w-full aspect-square rounded-lg overflow-hidden border border-outline-variant/20 shadow-sm">
-          <img
+          <Image
             src="/images/auth/registo-visual.jpg"
-            alt="ola amigo"
+            alt="Comunidade académica UNIKIVI"
+            width={700}
+            height={700}
+            priority
             className="object-cover w-full h-full"
           />
         </div>

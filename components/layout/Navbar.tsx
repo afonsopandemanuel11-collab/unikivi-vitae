@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NavDropdown from "./NavDropdown";
+import { createClient } from "@/lib/supabase/client";
 
 const navGroups = [
   {
@@ -33,6 +34,39 @@ const navGroups = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let active = true;
+
+    async function updateUser(user: { id: string } | null) {
+      if (!active) return;
+      setIsAuthenticated(Boolean(user));
+      if (!user) {
+        setPhotoUrl(null);
+        return;
+      }
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("photo_url")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (active) setPhotoUrl(data?.photo_url ?? null);
+    }
+
+    void supabase.auth.getUser().then(({ data }) => updateUser(data.user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      void updateUser(session?.user ?? null);
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <nav className="bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant sticky top-0 z-50 w-full transition-all">
@@ -71,19 +105,17 @@ export default function Navbar() {
 
         {/* Right Desktop Actions & Mobile Menu Toggle */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <Link
-            href="/login"
-            className="text-primary font-bold hover:text-primary-container transition-colors text-xs uppercase tracking-wider hidden sm:block px-3 py-2"
-          >
-            Entrar
-          </Link>
-
-          <Link
-            href="/registo"
-            className="bg-primary text-white px-3.5 sm:px-4 py-2 rounded-xl font-bold hover:bg-primary-container transition-all text-xs shadow-xs shrink-0"
-          >
-            Criar perfil
-          </Link>
+          {isAuthenticated ? (
+            <Link href="/dashboard" className="flex items-center gap-2 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-primary-container">
+              {photoUrl ? <Image src={photoUrl} alt="" width={24} height={24} className="h-6 w-6 rounded-full object-cover" /> : <span className="material-symbols-outlined text-base">account_circle</span>}
+              <span className="hidden sm:inline">Meu painel</span>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="hidden px-3 py-2 text-xs font-bold uppercase tracking-wider text-primary transition-colors hover:text-primary-container sm:block">Entrar</Link>
+              <Link href="/registo" className="shrink-0 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-primary-container sm:px-4">Criar perfil</Link>
+            </>
+          )}
 
           {/* Mobile Hamburger Button */}
           <button
@@ -162,21 +194,18 @@ export default function Navbar() {
             Sobre
           </Link>
 
-          <div className="pt-3 border-t border-outline-variant/60 flex flex-col gap-2">
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="w-full text-center py-2.5 rounded-xl border border-outline-variant font-bold text-primary hover:bg-surface-container transition-colors text-xs uppercase tracking-wider"
-            >
-              Entrar na Conta
-            </Link>
-            <Link
-              href="/registo"
-              onClick={() => setMobileOpen(false)}
-              className="w-full text-center py-2.5 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-colors text-xs uppercase tracking-wider shadow-xs"
-            >
-              Criar Novo Perfil
-            </Link>
+          <div className="flex flex-col gap-2 border-t border-outline-variant/60 pt-3">
+            {isAuthenticated ? (
+              <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-colors hover:bg-primary/90">
+                {photoUrl && <Image src={photoUrl} alt="" width={24} height={24} className="h-6 w-6 rounded-full object-cover" />}
+                Meu painel
+              </Link>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setMobileOpen(false)} className="w-full rounded-xl border border-outline-variant py-2.5 text-center text-xs font-bold uppercase tracking-wider text-primary transition-colors hover:bg-surface-container">Entrar na Conta</Link>
+                <Link href="/registo" onClick={() => setMobileOpen(false)} className="w-full rounded-xl bg-primary py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-colors hover:bg-primary/90">Criar Novo Perfil</Link>
+              </>
+            )}
           </div>
         </div>
       )}

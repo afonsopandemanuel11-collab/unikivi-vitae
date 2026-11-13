@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { formString, optionalFormString } from "@/lib/form-data";
 
 export async function addCertification(profileId: string, formData: FormData) {
   const supabase = await createClient();
@@ -18,12 +19,12 @@ export async function addCertification(profileId: string, formData: FormData) {
 
   const { error } = await supabase.from("certifications").insert({
     profile_id: profileId,
-    name: formData.get("name"),
-    issuer: formData.get("issuer"),
-    issue_date: formData.get("issue_date") || null,
-    expiry_date: formData.get("expiry_date") || null,
-    credential_id: formData.get("credential_id") || null,
-    credential_url: formData.get("credential_url") || null,
+    name: formString(formData, "name"),
+    issuer: formString(formData, "issuer"),
+    issue_date: optionalFormString(formData, "issue_date"),
+    expiry_date: optionalFormString(formData, "expiry_date"),
+    credential_id: optionalFormString(formData, "credential_id"),
+    credential_url: optionalFormString(formData, "credential_url"),
   });
 
   if (error) return { success: false, error: error.message };

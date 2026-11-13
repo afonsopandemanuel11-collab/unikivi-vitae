@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function FeaturedProfiles() {
@@ -22,10 +23,10 @@ export default async function FeaturedProfiles() {
         </p>
       </div>
       <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory px-margin-mobile md:px-margin-desktop pb-8 max-w-container-max mx-auto">
-        {(profiles ?? []).map((p: any) => {
+        {(profiles ?? []).map((p) => {
           const name = p.professional_name || p.full_name;
           const pos = Array.isArray(p.position) ? p.position[0] : p.position;
-          const tags = (p.profile_skills ?? []).map((ps: any) => {
+          const tags = (p.profile_skills ?? []).map((ps) => {
             const skill = Array.isArray(ps.skills) ? ps.skills[0] : ps.skills;
             return skill?.name;
           }).filter(Boolean).slice(0, 2);
@@ -36,9 +37,12 @@ export default async function FeaturedProfiles() {
               className="min-w-[300px] md:min-w-[350px] snap-start shrink-0 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow p-6 flex flex-col group"
             >
               <div className="flex items-start gap-4 mb-4">
-                <img
+                <Image
                   src={p.photo_url || "/images/avatar-placeholder.png"}
                   alt={name}
+                  width={64}
+                  height={64}
+                  unoptimized
                   className="w-16 h-16 rounded-full object-cover border border-outline-variant shadow-sm"
                 />
                 <div>
@@ -49,7 +53,7 @@ export default async function FeaturedProfiles() {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2 mt-auto">
-                {tags.map((tag: string) => (
+                {tags.map((tag) => (
                   <span key={tag} className="bg-surface-container-low text-primary px-3 py-1 rounded-full font-label-sm text-[10px] border border-outline-variant/20">
                     {tag}
                   </span>

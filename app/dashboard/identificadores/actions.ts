@@ -2,6 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import type { Enums } from "@/lib/supabase/database.types";
+
+const IDENTIFIER_TYPES = ["ORCID", "SCOPUS", "CIENCIA_VITAE", "GOOGLE_SCHOLAR", "RESEARCHER_ID", "WOS", "DIMENSIONS", "INSTITUTIONAL_PAGE", "LINKEDIN", "OTHER", "CIENCIA_ID", "PORTFOLIO", "GITHUB", "WEBSITE"] as const satisfies readonly Enums<"identifier_type_enum">[];
 
 function formatIdentifierUrl(type: string, value: string): string {
   const trimmed = value.trim();
@@ -52,11 +55,14 @@ export async function addIdentifier(
     .single();
 
   if (!ownProfile) return { success: false, error: "Perfil inválido ou não autorizado." };
+  if (!IDENTIFIER_TYPES.includes(identifierType as Enums<"identifier_type_enum">)) {
+    return { success: false, error: "Tipo de identificador inválido." };
+  }
 
   const { error } = await supabase.from("profile_identifiers").upsert(
     {
       profile_id: profileId,
-      identifier_type: identifierType,
+      identifier_type: identifierType as Enums<"identifier_type_enum">,
       identifier_value: identifierValue,
       url: formatIdentifierUrl(identifierType, identifierValue),
     },

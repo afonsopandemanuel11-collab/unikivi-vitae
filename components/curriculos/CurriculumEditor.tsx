@@ -233,7 +233,7 @@ export default function CurriculumEditor({
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
                   activeTab === tab.id
                     ? "bg-white text-primary shadow-xs border border-outline-variant/60"
@@ -663,7 +663,7 @@ export default function CurriculumEditor({
                         onClick={() =>
                           setSnapshot({
                             ...snapshot,
-                            settings: { ...snapshot.settings, density: d.id as any },
+                            settings: { ...snapshot.settings, density: d.id as CurriculumSnapshot["settings"]["density"] },
                           })
                         }
                         className={`p-2 rounded-xl border text-xs font-medium transition-all ${

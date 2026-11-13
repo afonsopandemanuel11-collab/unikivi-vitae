@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import type { Json, Tables } from "@/lib/supabase/database.types";
 
 const TEMPLATES = [
   { value: "UNIKIVI_CLASSIC", label: "UNIKIVI Classic (ATS)" },
@@ -13,16 +14,20 @@ const TEMPLATES = [
 
 const COLORS = ["#00113a", "#006970", "#d37758", "#2a4386"];
 
-export default function CurriculumPreferencesForm({ profile }: { profile: any }) {
-  const defaults = profile.cv_preferences ?? {};
-  const [template, setTemplate] = useState(defaults.default_template ?? "UNIKIVI_CLASSIC");
-  const [color, setColor] = useState(defaults.primary_color ?? COLORS[0]);
-  const [format, setFormat] = useState(defaults.format ?? "A4");
-  const [orientation, setOrientation] = useState(defaults.orientation ?? "PORTRAIT");
-  const [filenamePattern, setFilenamePattern] = useState(defaults.filename_pattern ?? "CV_{Nome}");
-  const [includeLinks, setIncludeLinks] = useState(defaults.include_links ?? true);
-  const [includeContacts, setIncludeContacts] = useState(defaults.include_contacts ?? true);
-  const [includePhoto, setIncludePhoto] = useState(defaults.include_photo ?? false);
+function preferenceObject(value: Json | null) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+export default function CurriculumPreferencesForm({ profile }: { profile: Pick<Tables<"profiles">, "user_id" | "cv_preferences"> }) {
+  const defaults = preferenceObject(profile.cv_preferences);
+  const [template, setTemplate] = useState(typeof defaults.default_template === "string" ? defaults.default_template : "UNIKIVI_CLASSIC");
+  const [color, setColor] = useState(typeof defaults.primary_color === "string" ? defaults.primary_color : COLORS[0]);
+  const [format, setFormat] = useState(typeof defaults.format === "string" ? defaults.format : "A4");
+  const [orientation, setOrientation] = useState(typeof defaults.orientation === "string" ? defaults.orientation : "PORTRAIT");
+  const [filenamePattern, setFilenamePattern] = useState(typeof defaults.filename_pattern === "string" ? defaults.filename_pattern : "CV_{Nome}");
+  const [includeLinks, setIncludeLinks] = useState(typeof defaults.include_links === "boolean" ? defaults.include_links : true);
+  const [includeContacts, setIncludeContacts] = useState(typeof defaults.include_contacts === "boolean" ? defaults.include_contacts : true);
+  const [includePhoto, setIncludePhoto] = useState(typeof defaults.include_photo === "boolean" ? defaults.include_photo : false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 

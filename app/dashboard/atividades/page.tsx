@@ -48,7 +48,10 @@ export default async function AtividadesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <AtividadesForm profileId={profile.id} />
-          <AtividadesList activities={activities ?? []} />
+          <AtividadesList activities={(activities ?? []).map((activity) => ({
+            ...activity,
+            employment_type: activity.employment_type ?? "OTHER",
+          }))} />
         </div>
 
         <div className="space-y-6">

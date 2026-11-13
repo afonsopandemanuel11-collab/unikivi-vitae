@@ -1,5 +1,6 @@
 // app/login/page.tsx
 import Link from "next/link";
+import Image from "next/image";
 import LoginForm from "@/components/auth/LoginForm";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -13,9 +14,12 @@ export default function LoginPage() {
         <div className="w-full max-w-[1000px] flex flex-col md:flex-row bg-white rounded-xl border border-outline-variant shadow-[0_20px_40px_-10px_rgba(0,0,0,0.08)] overflow-hidden">
           {/* Lado da imagem — só desktop */}
           <div className="relative hidden md:block md:w-1/2 overflow-hidden bg-ink-black min-h-[500px]">
-            <img
+            <Image
               src="/images/auth/lo.jpg"
               alt=""
+              width={900}
+              height={900}
+              priority
               className="absolute inset-0 h-full w-full object-cover opacity-90"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink-black/80 to-transparent" />

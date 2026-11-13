@@ -2,13 +2,16 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import type { Enums } from "@/lib/supabase/database.types";
+
+const PUBLICATION_TYPES = ["ARTICLE", "CONFERENCE", "BOOK", "BOOK_CHAPTER", "THESIS", "REPORT", "PREPRINT", "OTHER"] as const satisfies readonly Enums<"publication_type_enum">[];
 
 export type PublicationInput = {
   title: string;
   journal?: string | null;
   year?: number | null;
   doi?: string | null;
-  publication_type: string;
+  publication_type: Enums<"publication_type_enum">;
   coAuthors: string[];
 };
 
@@ -37,7 +40,7 @@ export async function addPublication(profileId: string, data: PublicationInput) 
       journal: data.journal || null,
       year: data.year || null,
       doi: data.doi || null,
-      publication_type: data.publication_type,
+      publication_type: PUBLICATION_TYPES.includes(data.publication_type) ? data.publication_type : "ARTICLE",
     })
     .select("id")
     .single();

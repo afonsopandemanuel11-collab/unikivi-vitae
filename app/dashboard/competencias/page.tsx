@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import CompetenciasForm from "@/components/Competencias/CompetenciasForm";
-import CompetenciasList from "@/components/Competencias/CompetenciasList";
+import CompetenciasForm from "@/components/competencias/CompetenciasForm";
+import CompetenciasList from "@/components/competencias/CompetenciasList";
 
 export default async function CompetenciasPage() {
   const supabase = await createClient();

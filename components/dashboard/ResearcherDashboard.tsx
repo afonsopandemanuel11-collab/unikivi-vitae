@@ -1,7 +1,8 @@
 // components/dashboard/ResearcherDashboard.tsx
 // PLACEHOLDER — será substituído pelo design fiel do Google Stitch.
+import type { Tables } from "@/lib/supabase/database.types";
 
-export default function ResearcherDashboard({ profile }: { profile: any }) {
+export default function ResearcherDashboard({ profile }: { profile: Pick<Tables<"profiles">, "status"> }) {
   return (
     <div className="space-y-6">
       {/* Linha 1 — métricas rápidas */}

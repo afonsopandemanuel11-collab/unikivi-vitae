@@ -12,6 +12,7 @@ export default async function ZonaDePerigoPage() {
     .select("*")
     .eq("user_id", userData.user.id)
     .single();
+  if (!profile) redirect("/completar-perfil");
 
   return <DangerZoneForm profile={profile} />;
 }

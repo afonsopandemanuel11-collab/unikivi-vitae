@@ -146,6 +146,7 @@ export default function IdentifiersManager({
                 <button
                   type="button"
                   onClick={() => handleDelete(id.id)}
+                  disabled={deletingId === id.id}
                   className="p-2 text-error hover:bg-error-container/30 rounded-lg transition-colors"
                 >
                   <span className="material-symbols-outlined text-sm">delete</span>

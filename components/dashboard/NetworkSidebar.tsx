@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export interface NetworkMember {
   id: string;
@@ -137,9 +138,12 @@ export default function NetworkSidebar({
               <div className="relative shrink-0">
                 <div className="w-12 h-12 rounded-full overflow-hidden border border-slate-200 bg-cyan-400 text-white flex items-center justify-center font-extrabold text-base shadow-xs">
                   {member.photo_url ? (
-                    <img
+                    <Image
                       src={member.photo_url}
                       alt={member.full_name}
+                      width={48}
+                      height={48}
+                      unoptimized
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -196,9 +200,12 @@ export default function NetworkSidebar({
                 >
                   <div className="w-11 h-11 rounded-full overflow-hidden border border-slate-200 shrink-0 bg-slate-100 flex items-center justify-center font-bold text-sm text-primary shadow-xs">
                     {person.photo_url ? (
-                      <img
+                      <Image
                         src={person.photo_url}
                         alt={person.full_name}
+                        width={44}
+                        height={44}
+                        unoptimized
                         className="w-full h-full object-cover"
                       />
                     ) : (

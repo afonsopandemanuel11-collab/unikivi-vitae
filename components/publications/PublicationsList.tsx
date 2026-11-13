@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import type { Enums } from "@/lib/supabase/database.types";
 
 const TABS = [
   { value: "ALL", label: "Todos" },
   { value: "ARTICLE", label: "Artigos" },
   { value: "BOOK", label: "Livros" },
-  { value: "CONFERENCE_PAPER", label: "Conferencias" },
+  { value: "CONFERENCE", label: "Conferencias" },
 ];
 
 type PublicationItem = {
@@ -16,11 +17,11 @@ type PublicationItem = {
   year: number | null;
   doi: string | null;
   url: string | null;
-  publication_type: string;
+  publication_type: Enums<"publication_type_enum">;
 };
 
 type Authored = {
-  publications: PublicationItem | PublicationItem[] | any;
+  publications: PublicationItem | PublicationItem[] | null;
 };
 
 type AuthorRow = {

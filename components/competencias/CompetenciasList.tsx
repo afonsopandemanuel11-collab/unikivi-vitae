@@ -1,8 +1,8 @@
 type ProfileSkill = {
   id: string;
-  level: string;
+  level: string | null;
   years_experience: number | null;
-  skills: { id: string; name: string; category_id: string } | { id: string; name: string; category_id: string }[] | null;
+  skills: { id: string; name: string; category_id: string | null } | { id: string; name: string; category_id: string | null }[] | null;
 };
 
 type Category = { id: string; name: string; icon: string | null };
@@ -70,7 +70,7 @@ export default function CompetenciasList({
                         {ps.skill?.name}
                       </span>
                       <span className="bg-primary text-white text-xs font-bold px-2 py-1 rounded-md">
-                        {LEVEL_LABELS[ps.level] ?? ps.level}
+                        {LEVEL_LABELS[ps.level ?? "BASIC"] ?? ps.level ?? "Básico"}
                       </span>
                     </div>
                     {ps.years_experience != null && (
@@ -81,7 +81,7 @@ export default function CompetenciasList({
                     <div className="w-full h-1.5 bg-surface-container rounded-full">
                       <div
                         className="h-full bg-primary rounded-full"
-                        style={{ width: `${LEVEL_PROGRESS[ps.level] ?? 0}%` }}
+                        style={{ width: `${LEVEL_PROGRESS[ps.level ?? "BASIC"] ?? 0}%` }}
                       />
                     </div>
                   </div>
