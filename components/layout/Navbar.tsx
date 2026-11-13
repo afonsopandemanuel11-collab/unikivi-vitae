@@ -36,6 +36,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoLoadFailed, setPhotoLoadFailed] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -46,6 +47,7 @@ export default function Navbar() {
       setIsAuthenticated(Boolean(user));
       if (!user) {
         setPhotoUrl(null);
+        setPhotoLoadFailed(false);
         return;
       }
 
@@ -54,7 +56,10 @@ export default function Navbar() {
         .select("photo_url")
         .eq("user_id", user.id)
         .maybeSingle();
-      if (active) setPhotoUrl(data?.photo_url ?? null);
+      if (active) {
+        setPhotoUrl(data?.photo_url ?? null);
+        setPhotoLoadFailed(false);
+      }
     }
 
     void supabase.auth.getUser().then(({ data }) => updateUser(data.user));
@@ -107,7 +112,19 @@ export default function Navbar() {
         <div className="flex items-center gap-3 sm:gap-4">
           {isAuthenticated ? (
             <Link href="/dashboard" className="flex items-center gap-2 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-primary-container">
-              {photoUrl ? <Image src={photoUrl} alt="" width={24} height={24} className="h-6 w-6 rounded-full object-cover" /> : <span className="material-symbols-outlined text-base">account_circle</span>}
+              {photoUrl && !photoLoadFailed ? (
+                <Image
+                  src={photoUrl}
+                  alt=""
+                  width={24}
+                  height={24}
+                  unoptimized
+                  onError={() => setPhotoLoadFailed(true)}
+                  className="h-6 w-6 rounded-full object-cover"
+                />
+              ) : (
+                <span aria-hidden="true" className="material-symbols-outlined text-base">account_circle</span>
+              )}
               <span className="hidden sm:inline">Meu painel</span>
             </Link>
           ) : (
@@ -197,7 +214,19 @@ export default function Navbar() {
           <div className="flex flex-col gap-2 border-t border-outline-variant/60 pt-3">
             {isAuthenticated ? (
               <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-colors hover:bg-primary/90">
-                {photoUrl && <Image src={photoUrl} alt="" width={24} height={24} className="h-6 w-6 rounded-full object-cover" />}
+                {photoUrl && !photoLoadFailed ? (
+                  <Image
+                    src={photoUrl}
+                    alt=""
+                    width={24}
+                    height={24}
+                    unoptimized
+                    onError={() => setPhotoLoadFailed(true)}
+                    className="h-6 w-6 rounded-full object-cover"
+                  />
+                ) : (
+                  <span aria-hidden="true" className="material-symbols-outlined text-base">account_circle</span>
+                )}
                 Meu painel
               </Link>
             ) : (
