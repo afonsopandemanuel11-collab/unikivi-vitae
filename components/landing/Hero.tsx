@@ -65,7 +65,6 @@ export default function Hero() {
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-xs font-bold text-white transition-colors hover:bg-primary-container"
             >
               Criar meu perfil
-              <span className="material-symbols-outlined text-base">arrow_forward</span>
             </Link>
             <Link
               href="/pesquisa"
