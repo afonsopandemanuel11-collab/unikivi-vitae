@@ -98,7 +98,7 @@ export default async function AdminDashboardPage() {
                       <span className="material-symbols-outlined text-outline">person_add</span>
                       <div>
                         <p className="font-body-md font-medium text-sm">{v.title}</p>
-                        <p className="font-label-sm text-outline">{v.profiles?.full_name}</p>
+                        <p className="font-label-sm text-outline">{v.profiles?.[0]?.full_name}</p>
                       </div>
                     </div>
                     <a href={`/admin/moderation`} className="px-3 py-1 bg-primary text-on-primary rounded-full font-label-sm">

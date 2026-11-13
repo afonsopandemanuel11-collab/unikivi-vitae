@@ -1,6 +1,4 @@
 // components/sobre/PurposeSection.tsx
-import Image from "next/image";
-
 export default function PurposeSection() {
   return (
     <section className="max-w-container-max mx-auto px-margin-desktop py-section-gap grid grid-cols-1 md:grid-cols-2 gap-gutter items-center">
@@ -32,13 +30,13 @@ export default function PurposeSection() {
         </p>
       </div>
 
-      <div className="relative w-full h-80 md:h-96 rounded-xl overflow-hidden border border-outline-variant shadow-sm">
-        <Image
-          src="/images/sobre/frende (4).jpg"
-          alt="Rede de conhecimento científico visualizada digitalmente"
-          fill
-          className="object-cover"
-        />
+      <div
+        aria-hidden="true"
+        className="relative w-full h-80 md:h-96 rounded-xl overflow-hidden border border-outline-variant shadow-sm bg-gradient-to-br from-primary/10 via-secondary-container/30 to-surface-container"
+      >
+        <div className="absolute inset-6 rounded-lg border border-primary/15" />
+        <div className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/20" />
+        <div className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full border border-secondary/30 bg-surface-container-lowest/70" />
       </div>
     </section>
   );

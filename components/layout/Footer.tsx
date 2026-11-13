@@ -15,16 +15,9 @@ const columns = [
   {
     title: "Institucional",
     links: [
+      { label: "Funcionalidades", href: "/funcionalidades" },
       { label: "Sobre", href: "/sobre" },
       { label: "Portal da Universidade", href: "https://unikivi.ao" },
-      { label: "Suporte Académico", href: "/sobre" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacidade", href: "/sobre" },
-      { label: "Termos de Uso", href: "/sobre" },
     ],
   },
 ];

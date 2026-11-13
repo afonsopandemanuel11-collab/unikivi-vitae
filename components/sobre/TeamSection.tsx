@@ -5,19 +5,19 @@ const team = [
   {
     name: "Afonso Pande Manuel",
     role: "Developer",
-    photo: "/images/sobre/afonso.jpg",
+    photo: "/images/sobre/Afonso.jpeg",
     bio: "Impulsionado pela necessidade de modernizar a infraestrutura universitária. Focado na arquitetura de sistemas e na construção de um ecossistema centralizado, seguro e escalável.",
   },
   {
     name: "Celeste Maquiesse Bengui Canga",
     role: "Developer",
-    photo: "/images/sobre/celeste.jpg",
+    photo: "/images/sobre/Celeste.jpeg",
     bio: "Especialista em criar interfaces intuitivas. O seu trabalho foca-se em garantir que a complexidade dos dados académicos seja apresentada através de uma experiência de utilizador fluida e impactante.",
   },
   {
     name: "Nkanga Pedro",
     role: "Orientador",
-    photo: "/images/sobre/nkanga.jpg",
+    photo: "/images/sobre/Nkanga.png",
     bio: "A visão estratégica por trás do projeto. Garante que a plataforma responde rigorosamente às necessidades da comunidade científica e cumpre os elevados padrões da instituição.",
   },
 ];
@@ -45,6 +45,7 @@ export default function TeamSection() {
                   src={member.photo}
                   alt={member.name}
                   fill
+                  sizes="96px"
                   className="object-cover"
                 />
               </div>

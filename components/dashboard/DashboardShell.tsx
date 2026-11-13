@@ -367,9 +367,8 @@ export default function DashboardShell({
           <span className="ml-2">© 2026 Universidade Kimpa Vita. Todos os direitos reservados.</span>
         </div>
         <div className="flex items-center gap-6">
-          <Link href="/sobre" className="hover:text-primary">Privacidade</Link>
-          <Link href="/sobre" className="hover:text-primary">Termos de Uso</Link>
-          <Link href="/sobre" className="hover:text-primary">Suporte Académico</Link>
+          <Link href="/funcionalidades" className="hover:text-primary">Funcionalidades</Link>
+          <Link href="/sobre" className="hover:text-primary">Sobre</Link>
           <a href="https://unikivi.ao" target="_blank" rel="noopener noreferrer" className="hover:text-primary">Portal da Universidade</a>
         </div>
       </footer>

@@ -17,7 +17,7 @@ const navGroups = [
   {
     label: "Plataforma",
     items: [
-      { label: "Funcionalidades", href: "/#funcionalidades" },
+      { label: "Funcionalidades", href: "/funcionalidades" },
       { label: "Pesquisa Institucional", href: "/pesquisa" },
       { label: "Sobre a Plataforma", href: "/sobre" },
     ],
@@ -57,15 +57,15 @@ export default function Navbar() {
             <Link href="/" className="text-primary font-bold text-xs uppercase tracking-wider">
               Início
             </Link>
+            {navGroups.map((group) => (
+              <NavDropdown key={group.label} group={group} />
+            ))}
             <Link
               href="/sobre"
               className="text-on-surface-variant font-medium hover:text-primary transition-colors text-xs uppercase tracking-wider"
             >
               Sobre
             </Link>
-            {navGroups.map((group) => (
-              <NavDropdown key={group.label} group={group} />
-            ))}
           </div>
         </div>
 
@@ -110,11 +110,11 @@ export default function Navbar() {
               Início
             </Link>
             <Link
-              href="/sobre"
+              href="/funcionalidades"
               onClick={() => setMobileOpen(false)}
               className="px-3 py-2.5 rounded-lg font-medium text-on-surface hover:bg-surface-container transition-colors text-sm"
             >
-              Sobre a Plataforma
+              Funcionalidades
             </Link>
             <Link
               href="/pesquisa"
@@ -151,15 +151,16 @@ export default function Navbar() {
               >
                 Estudantes
               </Link>
-              <Link
-                href="/#funcionalidades"
-                onClick={() => setMobileOpen(false)}
-                className="px-3 py-2 rounded-lg text-xs font-medium text-on-surface hover:bg-surface-container"
-              >
-                Funcionalidades
-              </Link>
             </div>
           </div>
+
+          <Link
+            href="/sobre"
+            onClick={() => setMobileOpen(false)}
+            className="block px-3 py-2.5 rounded-lg font-medium text-on-surface hover:bg-surface-container transition-colors text-sm"
+          >
+            Sobre
+          </Link>
 
           <div className="pt-3 border-t border-outline-variant/60 flex flex-col gap-2">
             <Link

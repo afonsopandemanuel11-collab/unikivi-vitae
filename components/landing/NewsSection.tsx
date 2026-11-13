@@ -1,6 +1,7 @@
 // components/landing/NewsSection.tsx
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import NewsImage from "@/components/landing/NewsImage";
 
 const CATEGORY_STYLES: Record<string, string> = {
   PLATAFORMA: "bg-secondary-fixed/20 text-on-secondary-fixed",
@@ -58,14 +59,11 @@ export default async function NewsSection() {
             return (
               <article key={item.id} className="flex flex-col group rounded-2xl border border-outline-variant/70 bg-white p-3 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
                 <div className="aspect-video rounded-xl mb-4 overflow-hidden border border-outline-variant/70 bg-surface-container">
-                  <img
+                  <NewsImage
                     src={imgSrc}
+                    fallbackSrc={CATEGORY_FALLBACK_IMAGES[item.category] || "/images/carousel/c (10).jpg"}
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    onError={(event) => {
-                      event.currentTarget.onerror = null;
-                      event.currentTarget.src = CATEGORY_FALLBACK_IMAGES[item.category] || "/images/carousel/c (10).jpg";
-                    }}
                   />
                 </div>
 
