@@ -72,7 +72,7 @@ export default function PlatformCarousel() {
           aria-label="Slide anterior"
           className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors cursor-pointer text-primary"
         >
-          <span className="material-symbols-outlined text-xl">chevron_left</span>
+          <span aria-hidden="true" className="h-2.5 w-2.5 rotate-45 border-b-2 border-l-2 border-current" />
         </button>
 
         <span className="font-label-sm text-xs text-on-surface-variant font-bold">
@@ -84,7 +84,7 @@ export default function PlatformCarousel() {
           aria-label="Próximo slide"
           className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-surface-container transition-colors cursor-pointer text-primary"
         >
-          <span className="material-symbols-outlined text-xl">chevron_right</span>
+          <span aria-hidden="true" className="h-2.5 w-2.5 rotate-45 border-r-2 border-t-2 border-current" />
         </button>
       </div>
     </section>
