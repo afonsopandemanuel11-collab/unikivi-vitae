@@ -30,30 +30,30 @@ export default function SolutionSection() {
   return (
     <section
       id="funcionalidades"
-      className="py-16 sm:py-20 md:py-24 max-w-container-max mx-auto px-4 sm:px-6 lg:px-8"
+      className="mx-auto max-w-container-max px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
     >
-      <h2 className="font-headline-lg text-primary text-2xl sm:text-3xl md:text-4xl text-center mb-12 sm:mb-16 font-bold tracking-tight">
+      <h2 className="mb-10 text-center font-headline-lg text-2xl font-bold tracking-tight text-on-surface sm:text-3xl">
         Uma nova forma de organizar o conhecimento.
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
         {solutions.map((s) => (
           <div
             key={s.title}
-            className="flex flex-col bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/60 shadow-2xs hover:shadow-md transition-shadow"
+            className="flex flex-col border-t border-outline-variant px-1 pt-4 transition-colors hover:border-primary"
           >
             <div
-              className={`h-1 w-12 rounded-full mb-6 ${
+              className={`mb-4 h-0.5 w-10 ${
                 s.ai ? "bg-secondary" : "bg-primary"
               }`}
             />
-            <span className="material-symbols-outlined text-primary mb-3 text-3xl">
+            <span className="material-symbols-outlined mb-2 text-xl text-primary">
               {s.icon}
             </span>
-            <h3 className="font-headline-md text-lg sm:text-xl font-bold text-primary mb-2">
+            <h3 className="mb-1 font-headline-md text-sm font-semibold text-on-surface sm:text-base">
               {s.title}
             </h3>
-            <p className="font-body-md text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            <p className="font-body-md text-xs leading-relaxed text-on-surface-variant">
               {s.text}
             </p>
           </div>

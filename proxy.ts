@@ -1,8 +1,7 @@
-// middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -26,12 +25,11 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // refresca o token de sessão em cada pedido, se necessário
   await supabase.auth.getUser();
 
   return response;
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/dashboard/:path*", "/admin/:path*", "/api/account/:path*", "/perfil/:path*"],
 };

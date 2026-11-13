@@ -10,6 +10,7 @@ import EducationTimeline from "@/components/perfil/EducationTimeline";
 import PublicationsGrid from "@/components/perfil/PublicationsGrid";
 import ProjectsList from "@/components/perfil/ProjectsList";
 import AwardsList from "@/components/perfil/AwardsList";
+import ProfileViewTracker from "@/components/perfil/ProfileViewTracker";
 
 export default async function PerfilPage({
   params,
@@ -80,6 +81,10 @@ export default async function PerfilPage({
 
   return (
     <>
+      <ProfileViewTracker
+        profileId={raw.id}
+        enabled={!isOwner && raw.visibility === "PUBLIC" && raw.status === "ACTIVE"}
+      />
       <Navbar />
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">

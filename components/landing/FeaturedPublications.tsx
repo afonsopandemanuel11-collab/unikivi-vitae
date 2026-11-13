@@ -52,17 +52,17 @@ export default async function FeaturedPublications() {
     : [];
 
   return (
-    <section className="py-section-gap bg-surface-container-low overflow-hidden">
-      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center mb-12">
-        <h2 className="font-headline-lg text-primary mb-4 text-3xl md:text-4xl">Produção Científica em Destaque</h2>
-        <p className="font-body-lg text-on-surface-variant max-w-3xl mx-auto">
+    <section className="overflow-hidden bg-surface-container-low py-16 md:py-20">
+      <div className="mx-auto mb-10 max-w-container-max px-margin-mobile text-center md:px-margin-desktop">
+        <h2 className="mb-3 font-headline-lg text-2xl text-primary sm:text-3xl">Produção Científica em Destaque</h2>
+        <p className="mx-auto max-w-3xl font-body-lg text-sm text-on-surface-variant sm:text-base">
           Descubra as mais recentes investigações, artigos e teses produzidos pela nossa comunidade académica.
         </p>
       </div>
 
       {!hasRealData ? (
-        <div className="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop">
-          <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest px-6 py-10 text-center shadow-sm">
+        <div className="mx-auto max-w-3xl px-margin-mobile md:px-margin-desktop">
+          <div className="rounded-xl border border-outline-variant/70 bg-white px-6 py-10 text-center shadow-[0_12px_32px_rgba(0,17,58,0.05)]">
             <span className="material-symbols-outlined text-4xl text-primary/60">auto_stories</span>
             <h3 className="mt-3 font-headline-md text-lg font-bold text-primary">As publicações da comunidade estarão aqui</h3>
             <p className="mt-2 font-body-md text-sm text-on-surface-variant">Ainda não há produção científica pública para destacar. Explore o diretório ou registe o seu perfil académico.</p>
@@ -72,45 +72,45 @@ export default async function FeaturedPublications() {
           </div>
         </div>
       ) : (
-      <div className="flex gap-6 overflow-x-auto snap-x snap-mandatory px-margin-mobile md:px-margin-desktop pb-8 max-w-container-max mx-auto">
+      <div className="mx-auto flex max-w-container-max snap-x snap-mandatory gap-5 overflow-x-auto px-margin-mobile pb-5 md:gap-6 md:px-margin-desktop">
         {items.map((pub: any) => (
           <div
             key={pub.id}
-            className="min-w-[300px] md:min-w-[400px] snap-start shrink-0 bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-all p-6 flex flex-col hover:-translate-y-1 group"
+            className="flex min-h-[230px] w-[min(88vw,920px)] shrink-0 snap-start flex-col rounded-xl border border-outline-variant/70 bg-white p-6 shadow-[0_12px_32px_rgba(0,17,58,0.055)] transition-all duration-300 hover:-translate-y-0.5 hover:border-outline-variant hover:shadow-[0_18px_40px_rgba(0,17,58,0.09)] sm:p-8 group"
           >
             {/* Type + Year */}
-            <div className="flex items-center gap-2 mb-4">
-              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${TYPE_COLORS[pub.publication_type] ?? "bg-gray-100 text-gray-700"}`}>
+            <div className="mb-5 flex items-center gap-2.5">
+              <span className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${TYPE_COLORS[pub.publication_type] ?? "bg-gray-100 text-gray-700"}`}>
                 {TYPE_LABELS[pub.publication_type] ?? pub.publication_type}
               </span>
               {pub.year && (
-                <span className="text-xs text-on-surface-variant font-label-sm">{pub.year}</span>
+                <span className="font-label-sm text-xs text-on-surface-variant">{pub.year}</span>
               )}
             </div>
 
             {/* Title */}
-            <h3 className="font-headline-md text-lg text-primary font-bold mb-3 leading-snug group-hover:text-surface-tint transition-colors line-clamp-3">
+            <h3 className="mb-3 line-clamp-3 font-headline-md text-xl font-semibold leading-snug text-primary transition-colors group-hover:text-surface-tint sm:text-2xl">
               {pub.title}
             </h3>
 
             {/* Authors */}
             {pub.authors && (
-              <p className="text-xs text-on-surface-variant font-semibold mb-3 truncate">
+              <p className="mb-3 truncate text-sm font-medium text-on-surface-variant">
                 {pub.authors}
               </p>
             )}
 
             {/* Abstract */}
             {pub.abstract && (
-              <p className="font-body-md text-sm text-on-surface-variant mb-4 line-clamp-3 leading-relaxed flex-1">
+              <p className="mb-4 line-clamp-3 flex-1 font-body-md text-sm leading-relaxed text-on-surface-variant sm:text-base">
                 {pub.abstract}
               </p>
             )}
 
             {/* Journal */}
             {pub.journal && (
-              <div className="mt-auto pt-4 border-t border-outline-variant/30">
-                <span className="text-xs font-medium text-on-surface-variant italic">{pub.journal}</span>
+              <div className="mt-auto border-t border-outline-variant/50 pt-4">
+                <span className="text-xs font-medium italic leading-relaxed text-on-surface-variant">{pub.journal}</span>
               </div>
             )}
           </div>
@@ -119,18 +119,18 @@ export default async function FeaturedPublications() {
         {/* CTA card */}
         <Link
           href="/pesquisa"
-          className="min-w-[260px] md:min-w-[300px] snap-start shrink-0 bg-primary rounded-2xl p-6 flex flex-col justify-center items-center text-center group hover:bg-primary/90 transition-colors shadow-md"
+          className="flex min-h-[230px] w-[min(76vw,340px)] shrink-0 snap-start flex-col items-center justify-center rounded-xl border border-outline-variant/70 bg-white p-6 text-center shadow-[0_12px_32px_rgba(0,17,58,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_18px_40px_rgba(0,17,58,0.09)] group"
         >
-          <span className="material-symbols-outlined text-5xl text-white/60 mb-4 group-hover:scale-110 transition-transform">
+          <span className="material-symbols-outlined mb-4 text-4xl text-primary/65 transition-transform group-hover:scale-105">
             science
           </span>
-          <h3 className="font-headline-md text-lg font-bold text-white mb-2">
+          <h3 className="mb-2 font-headline-md text-base font-semibold text-primary">
             Ver Toda a Produção
           </h3>
-          <p className="font-body-md text-sm text-white/70">
+          <p className="font-body-md text-sm text-on-surface-variant">
             Explore o repositório científico da UNIKIVI.
           </p>
-          <div className="mt-6 flex items-center gap-2 text-white font-bold text-sm">
+          <div className="mt-6 flex items-center gap-2 text-sm font-bold text-primary">
             Explorar
             <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </div>

@@ -6,7 +6,6 @@ import SolutionSection from "@/components/landing/SolutionSection";
 import PlatformCarousel from "@/components/landing/PlatformCarousel";
 import PublicProfilesCarousel from "@/components/landing/PublicProfilesCarousel";
 import CurriculumTemplates from "@/components/landing/CurriculumTemplates";
-import FeaturedProfiles from "@/components/landing/FeaturedProfiles";
 import FeaturedPublications from "@/components/landing/FeaturedPublications";
 import ExploreSection from "@/components/landing/ExploreSection";
 import NewsSection from "@/components/landing/NewsSection";
@@ -20,9 +19,8 @@ export default function Home() {
       <ProblemSection />
       <SolutionSection />
       <PlatformCarousel />
-      <PublicProfilesCarousel />
       <CurriculumTemplates />
-      <FeaturedProfiles />
+      <PublicProfilesCarousel />
       <FeaturedPublications />
       <ExploreSection />
       <NewsSection />
