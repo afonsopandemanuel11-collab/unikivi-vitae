@@ -236,6 +236,7 @@ export default function UsersManagement({ initialUsers }: { initialUsers: Profil
                                 alt={user.full_name}
                                 width={40}
                                 height={40}
+                                unoptimized
                                 className="h-full w-full object-cover"
                               />
                             ) : (

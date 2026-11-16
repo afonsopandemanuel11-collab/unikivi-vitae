@@ -310,6 +310,7 @@ export default function ModerationQueue({
                                 alt={item.author_name}
                                 width={32}
                                 height={32}
+                                unoptimized
                                 className="h-full w-full object-cover"
                               />
                             ) : (
