@@ -64,12 +64,10 @@ export default function AdminShell({
         <div>
           {/* Brand */}
           <div className="mb-6 flex items-center gap-3 px-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-surface-bright shadow-sm">
-              <span className="material-symbols-outlined text-2xl text-primary font-bold">school</span>
-            </div>
+            <Image src="/logo.png" alt="UNIKIVI Vitae" width={40} height={40} className="h-10 w-10 shrink-0 object-contain" />
             <div>
-              <h1 className="font-headline-md text-base font-bold text-white">UNIKIVI Admin</h1>
-              <p className="font-label-sm text-xs text-primary-fixed-dim/80">Management Portal</p>
+              <h1 className="font-headline-md text-base font-bold text-white">UNIKIVI Vitae</h1>
+              <p className="font-label-sm text-xs text-primary-fixed-dim/80">Portal de Administração</p>
             </div>
           </div>
 
@@ -121,6 +119,14 @@ export default function AdminShell({
           </div>
 
           <div className="space-y-1 border-t border-outline-variant/20 pt-3">
+            <Link
+              href="/dashboard"
+              onClick={() => mobile && setMobileOpen(false)}
+              className="flex items-center gap-3 rounded-lg px-3.5 py-2 text-xs font-medium text-primary-fixed-dim/75 transition-colors hover:bg-primary-container hover:text-white"
+            >
+              <span aria-hidden="true" className="material-symbols-outlined text-[18px]">arrow_back</span>
+              <span>Voltar ao meu painel</span>
+            </Link>
             <Link
               href="/admin/settings"
               onClick={() => mobile && setMobileOpen(false)}
@@ -185,8 +191,9 @@ export default function AdminShell({
               />
             </div>
 
-            <div className="ml-2 hidden font-headline-md text-base font-extrabold tracking-tight text-primary xl:block">
-              UNIKIVI Vitae Admin
+            <div className="ml-2 hidden items-center gap-2 font-headline-md text-base font-extrabold tracking-tight text-primary xl:flex">
+              <Image src="/logo.png" alt="" width={28} height={28} className="h-7 w-7 object-contain" />
+              <span>UNIKIVI Vitae</span>
             </div>
           </div>
 
