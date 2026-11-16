@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "seed:api-demo": "tsx scripts/seed-api-demo-investigators.ts",
+    "expand:api-demo": "tsx scripts/expand-api-demo-population.ts",
+    "clean:api-demo": "tsx scripts/cleanup-api-demo-investigators.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

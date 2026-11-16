@@ -1,84 +1,119 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 
-const NAV_ITEMS = [
-  { label: "Dashboard", icon: "dashboard", href: "/admin" },
-  { label: "Users", icon: "group", href: "/admin/users" },
-  { label: "Profiles", icon: "badge", href: "/admin/profiles" },
-  { label: "Resumes", icon: "description", href: "/admin/resumes" },
-  { label: "Publications", icon: "library_books", href: "/admin/publications" },
-  { label: "Projects", icon: "account_tree", href: "/admin/projects" },
-  { label: "News", icon: "newspaper", href: "/admin/news" },
-  { label: "Moderation", icon: "gavel", href: "/admin/moderation" },
+const BASE_NAV_ITEMS = [
+  { label: "Visão geral", icon: "dashboard", href: "/admin" },
+  { label: "Utilizadores", icon: "group", href: "/admin/users" },
+  { label: "Perfis", icon: "badge", href: "/admin/profiles" },
+  { label: "Currículos", icon: "description", href: "/admin/resumes" },
+  { label: "Publicações", icon: "library_books", href: "/admin/publications" },
+  { label: "Projetos", icon: "account_tree", href: "/admin/projects" },
+  { label: "Notícias", icon: "newspaper", href: "/admin/news" },
+  { label: "Validação", icon: "gavel", href: "/admin/moderation" },
 ];
 
-export default function AdminShell({ children }: { children: React.ReactNode }) {
+const routeTitles: Record<string, string> = {
+  "/admin": "Visão geral",
+  "/admin/users": "Gestão de utilizadores",
+  "/admin/profiles": "Perfis institucionais",
+  "/admin/resumes": "Currículos",
+  "/admin/publications": "Publicações",
+  "/admin/projects": "Projetos",
+  "/admin/news": "Notícias e comunicados",
+  "/admin/moderation": "Fila de validação",
+  "/admin/settings": "Definições",
+  "/admin/api": "API e integrações",
+};
+
+export default function AdminShell({
+  children,
+  canManageApi = false,
+}: {
+  children: React.ReactNode;
+  canManageApi?: boolean;
+}) {
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const navItems = canManageApi
+    ? [...BASE_NAV_ITEMS, { label: "API e integrações", icon: "api", href: "/admin/api" }]
+    : BASE_NAV_ITEMS;
+  const title = routeTitles[pathname] ?? "Administração";
 
   async function handleLogout() {
+    setLoggingOut(true);
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
   }
 
-  return (
-    <div className="flex min-h-screen bg-background text-on-background">
-      <nav className="h-screen w-64 fixed left-0 top-0 bg-primary flex flex-col py-6 px-4 z-50">
-        <div className="mb-8 px-2 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-surface-bright flex items-center justify-center shadow-sm">
-            <span className="material-symbols-outlined text-primary text-2xl">school</span>
-          </div>
+  function navigation(mobile = false) {
+    return (
+      <>
+        <div className="mb-8 flex items-center gap-3 px-2">
+          <Image src="/logo.png" alt="" width={42} height={42} className="h-10 w-10 rounded-xl bg-white object-contain p-1" />
           <div>
-            <h1 className="font-headline-md text-on-primary font-bold">UNIKIVI Admin</h1>
-            <p className="font-label-sm text-on-primary-fixed-variant opacity-80">Management Portal</p>
+            <p className="font-headline-md text-lg font-bold text-white">UNIKIVI Admin</p>
+            <p className="text-xs text-blue-200/80">Portal de gestão</p>
           </div>
         </div>
-
-        <div className="flex-1 space-y-1">
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href;
+        <nav aria-label="Navegação administrativa" className="flex-1 space-y-1 overflow-y-auto">
+          {navItems.map((item) => {
+            const active = item.href === "/admin" ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg font-body-md transition-colors ${
-                  isActive
-                    ? "bg-secondary-container text-on-secondary-container font-bold"
-                    : "text-on-primary-fixed-variant hover:bg-primary-container"
-                }`}
+                onClick={() => mobile && setMobileOpen(false)}
+                aria-current={active ? "page" : undefined}
+                className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm transition-colors ${active ? "bg-secondary-container font-bold text-on-secondary-container" : "text-blue-100/75 hover:bg-primary-container hover:text-white"}`}
               >
-                <span className="material-symbols-outlined">{item.icon}</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-xl">{item.icon}</span>
                 {item.label}
               </Link>
             );
           })}
+        </nav>
+        <div className="mt-5 border-t border-white/15 pt-4">
+          <Link href="/admin/settings" onClick={() => mobile && setMobileOpen(false)} className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm transition-colors ${pathname === "/admin/settings" ? "bg-secondary-container font-bold text-on-secondary-container" : "text-blue-100/75 hover:bg-primary-container hover:text-white"}`}>
+            <span aria-hidden="true" className="material-symbols-outlined text-xl">settings</span>Definições
+          </Link>
+          <button type="button" onClick={handleLogout} disabled={loggingOut} className="flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm text-blue-100/75 transition-colors hover:bg-primary-container hover:text-white disabled:opacity-60">
+            <span aria-hidden="true" className="material-symbols-outlined text-xl">logout</span>{loggingOut ? "A terminar sessão…" : "Terminar sessão"}
+          </button>
         </div>
+      </>
+    );
+  }
 
-        <div className="mt-auto space-y-4">
-          <div className="space-y-1">
-            <Link href="/admin/settings" className="flex items-center gap-3 text-on-primary-fixed-variant px-4 py-3 hover:bg-primary-container rounded-lg transition-colors">
-              <span className="material-symbols-outlined">settings</span>
-              Settings
-            </Link>
-            <button onClick={handleLogout} className="w-full flex items-center gap-3 text-on-primary-fixed-variant px-4 py-3 hover:bg-primary-container rounded-lg transition-colors">
-              <span className="material-symbols-outlined">logout</span>
-              Logout
+  return (
+    <div className="min-h-screen bg-background text-on-background lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col bg-primary px-4 py-6 lg:flex">
+        {navigation()}
+      </aside>
+      <div className="min-w-0 flex-1 lg:ml-64">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-outline-variant bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <button type="button" onClick={() => setMobileOpen((open) => !open)} aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"} className="rounded-lg p-2 text-primary hover:bg-surface-container lg:hidden">
+              <span aria-hidden="true" className="material-symbols-outlined">{mobileOpen ? "close" : "menu"}</span>
             </button>
+            <div><p className="hidden text-[11px] font-bold uppercase tracking-[0.14em] text-outline sm:block">UNIKIVI Vitae</p><h1 className="font-headline-md text-base font-bold text-primary sm:text-lg">{title}</h1></div>
           </div>
-        </div>
-      </nav>
-
-      <div className="flex-1 ml-64 flex flex-col min-h-screen">
-        <header className="sticky top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center h-16 px-gutter">
-          <div className="font-headline-md font-extrabold text-primary">UNIKIVI Vitae Admin</div>
+          <div className="flex items-center gap-2 text-xs font-semibold text-on-surface-variant sm:gap-3">
+            <span className="hidden rounded-full bg-surface-container-low px-3 py-2 sm:inline-flex sm:items-center sm:gap-2"><span className="h-2 w-2 rounded-full bg-emerald-500" />Área administrativa</span>
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-fixed text-primary"><span aria-hidden="true" className="material-symbols-outlined">admin_panel_settings</span></span>
+          </div>
         </header>
-        <main className="flex-1 p-8 xl:p-12 max-w-container-max mx-auto w-full">{children}</main>
+        <main className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">{children}</main>
       </div>
+      {mobileOpen && <div className="fixed inset-0 z-50 bg-primary p-5 text-white lg:hidden"><div className="mb-5 flex justify-end"><button type="button" onClick={() => setMobileOpen(false)} aria-label="Fechar menu" className="rounded-lg p-2 hover:bg-primary-container"><span aria-hidden="true" className="material-symbols-outlined">close</span></button></div><div className="flex h-[calc(100%-3rem)] flex-col">{navigation(true)}</div></div>}
     </div>
   );
 }

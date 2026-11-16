@@ -9,8 +9,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
   const isAdmin = (roles ?? []).some((r) => r.role === "institution_admin" || r.role === "super_admin");
+  const canManageApi = (roles ?? []).some((r) => r.role === "super_admin");
 
   if (!isAdmin) redirect("/dashboard");
 
-  return <AdminShell>{children}</AdminShell>;
+  return <AdminShell canManageApi={canManageApi}>{children}</AdminShell>;
 }

@@ -1598,6 +1598,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      consume_api_key_request: {
+        Args: { p_api_key_id: string; p_limit: number }
+        Returns: { allowed: boolean; remaining: number; reset_at: string }[]
+      }
       auth_has_role: {
         Args: { required_role: Database["public"]["Enums"]["user_role_enum"] }
         Returns: boolean

@@ -1,7 +1,7 @@
 // components/dashboard/DashboardShell.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -71,6 +71,25 @@ export default function DashboardShell({
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [canManageAdmin, setCanManageAdmin] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    async function checkAdminRole() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("user_roles")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .eq("role", "super_admin")
+        .maybeSingle();
+      if (active) setCanManageAdmin(Boolean(data));
+    }
+    void checkAdminRole();
+    return () => { active = false; };
+  }, []);
 
   async function handleLogout() {
     try {
@@ -193,6 +212,21 @@ export default function DashboardShell({
               </ul>
             </div>
           ))}
+
+          {canManageAdmin && (
+            <div className="border-t border-outline-variant/60 pt-4">
+              <h2 className="px-3 text-xs font-black text-slate-400 tracking-wider uppercase">ADMINISTRAÇÃO</h2>
+              <Link
+                href="/admin"
+                onClick={() => { if (isMobile) setMobileDrawerOpen(false); }}
+                aria-current={pathname.startsWith("/admin") ? "page" : undefined}
+                className={`mt-1 flex items-center gap-3.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${pathname.startsWith("/admin") ? "bg-primary text-white font-bold shadow-sm" : "text-slate-700 hover:bg-slate-100 hover:text-primary"}`}
+              >
+                <span aria-hidden="true" className="material-symbols-outlined text-[22px]">admin_panel_settings</span>
+                <span className="flex-1">Área de administração</span>
+              </Link>
+            </div>
+          )}
 
           {/* Perfil Copilot Action Button */}
           <div className="pt-2 px-1">

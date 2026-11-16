@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -57,9 +58,9 @@ export default function LoginForm() {
           <label htmlFor="password" className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
             Palavra-passe
           </label>
-          <a href="#" className="font-label-sm text-label-sm text-primary hover:text-primary-container transition-colors underline underline-offset-2">
+          <Link href="/recuperar-senha" className="font-label-sm text-label-sm text-primary hover:text-primary-container transition-colors underline underline-offset-2">
             Esqueceu-se?
-          </a>
+          </Link>
         </div>
         <div className="relative w-full">
           <input
