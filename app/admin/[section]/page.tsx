@@ -3,10 +3,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 const sections = {
   users: { title: "Utilizadores", table: "profiles", description: "Contas e perfis registados na plataforma." },
-  profiles: { title: "Perfis", table: "profiles", description: "Perfis académicos e profissionais." },
-  resumes: { title: "Currículos", table: "curricula", description: "Currículos criados pelos membros." },
-  publications: { title: "Publicações", table: "publications", description: "Produção científica registada." },
-  projects: { title: "Projetos", table: "projects", description: "Projetos académicos e científicos." },
+  profiles: { title: "Perfis Institucionais", table: "profiles", description: "Perfis académicos, de investigação e profissionais." },
+  resumes: { title: "Currículos", table: "curricula", description: "Currículos criados pelos membros na plataforma." },
+  publications: { title: "Publicações", table: "publications", description: "Produção científica registada pela comunidade académica." },
+  projects: { title: "Projetos", table: "projects", description: "Projetos académicos e científicos em curso ou concluídos." },
   news: { title: "Notícias", table: "news", description: "Notícias publicadas na plataforma." },
   moderation: { title: "Moderação", table: "profile_verifications", description: "Pedidos de verificação que aguardam revisão." },
 } as const;
@@ -30,10 +30,33 @@ export default async function AdminSectionPage({
 
   if (section === "settings") {
     return (
-      <section className="max-w-3xl">
-        <h1 className="text-3xl font-bold text-primary">Definições</h1>
-        <p className="mt-3 text-on-surface-variant">As configurações administrativas são geridas no painel seguro do projeto. Não existem preferências editáveis configuradas nesta aplicação.</p>
-      </section>
+      <div className="max-w-3xl space-y-6">
+        <div>
+          <h1 className="font-headline-lg text-3xl font-bold tracking-tight text-primary">
+            Definições da Plataforma
+          </h1>
+          <p className="mt-2 font-body-md text-sm text-on-surface-variant">
+            Configurações globais e políticas de segurança da UNIKIVI Vitae.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm space-y-4">
+          <h3 className="font-headline-md text-base font-bold text-primary">
+            Parâmetros de Auditoria &amp; Segurança
+          </h3>
+          <p className="font-body-md text-xs leading-relaxed text-on-surface-variant">
+            As políticas de autenticação multifator, quotas de API e registo de conformidade estão
+            ativas ao nível de infraestrutura institucional. Alterações nos parâmetros de gateway
+            são realizadas mediante parecer técnico do Gabinete de Sistemas.
+          </p>
+          <div className="pt-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-container/20 px-3 py-1 font-label-sm text-xs font-semibold text-on-secondary-container border border-secondary-container/40">
+              <span className="h-2 w-2 rounded-full bg-secondary animate-pulse" />
+              Sistemas Operacionais
+            </span>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -45,6 +68,7 @@ export default async function AdminSectionPage({
     .select("*")
     .order("created_at", { ascending: false })
     .limit(100);
+
   const rows = (data ?? []) as Row[];
   const preferredColumns: Record<AdminSection, string[]> = {
     users: ["full_name", "profile_type", "status", "created_at"],
@@ -58,34 +82,79 @@ export default async function AdminSectionPage({
   const columns = preferredColumns[key];
 
   return (
-    <section>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-primary">{config.title}</h1>
-        <p className="mt-2 text-on-surface-variant">{config.description}</p>
+    <div className="space-y-6">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <h1 className="font-headline-lg text-3xl font-bold tracking-tight text-primary">
+            {config.title}
+          </h1>
+          <p className="mt-1 font-body-md text-sm text-on-surface-variant">{config.description}</p>
+        </div>
+        <span className="font-label-sm text-xs text-outline">
+          Total listado: {rows.length} registos
+        </span>
       </div>
+
       {error ? (
         <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-800">
-          Não foi possível carregar os registos desta secção. Verifique a tabela e as permissões administrativas do projeto.
+          Não foi possível carregar os registos desta secção. Verifique a tabela e as permissões
+          administrativas do projeto.
         </div>
       ) : rows.length === 0 ? (
-        <p className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 text-on-surface-variant">Ainda não existem registos nesta secção.</p>
+        <p className="rounded-xl border border-outline-variant bg-surface-container-lowest p-8 text-center text-sm text-on-surface-variant shadow-sm">
+          Ainda não existem registos nesta secção.
+        </p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-lowest">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-outline-variant bg-surface-container-low">
-              <tr>{columns.map((column) => <th key={column} className="px-5 py-3 font-semibold text-primary">{column.replaceAll("_", " ")}</th>)}</tr>
-            </thead>
-            <tbody>
-              {rows.map((row, index) => (
-                <tr key={String(row.id ?? index)} className="border-b border-outline-variant/60 last:border-0">
-                  {columns.map((column) => <td key={column} className="max-w-sm truncate px-5 py-4 text-on-surface-variant">{displayValue(row[column])}</td>)}
+        <div className="editorial-shadow overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest">
+          <div className="w-full overflow-x-auto">
+            <table className="w-full border-collapse text-left font-body-md text-sm">
+              <thead className="border-b border-outline-variant bg-surface-container-low font-label-sm text-xs font-semibold text-primary">
+                <tr>
+                  {columns.map((column) => (
+                    <th key={column} className="px-6 py-4 capitalize">
+                      {column.replaceAll("_", " ")}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="border-t border-outline-variant px-5 py-3 text-xs text-on-surface-variant">A mostrar até 100 registos recentes.</p>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/50 text-on-surface">
+                {rows.map((row, index) => (
+                  <tr
+                    key={String(row.id ?? index)}
+                    className="transition-colors hover:bg-surface-container/50"
+                  >
+                    {columns.map((column) => {
+                      const val = displayValue(row[column]);
+                      const isStatus = column === "status" || column === "verification_status";
+                      return (
+                        <td key={column} className="max-w-sm truncate px-6 py-4">
+                          {isStatus ? (
+                            <span
+                              className={`rounded-full px-2.5 py-0.5 font-label-sm text-xs font-semibold ${
+                                val === "ACTIVE" || val === "APPROVED" || val === "PUBLISHED"
+                                  ? "bg-secondary-container/20 text-on-secondary-container border border-secondary-container/30"
+                                  : "bg-surface-container-high text-on-surface-variant"
+                              }`}
+                            >
+                              {val}
+                            </span>
+                          ) : (
+                            <span className="text-on-surface-variant">{val}</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="border-t border-outline-variant bg-surface-container-low px-6 py-3 font-label-sm text-xs text-on-surface-variant">
+            A mostrar {rows.length} registos recentes.
+          </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }
+
